@@ -138,15 +138,15 @@ deploy_to_frontend() {
             error "Package not found: $source_path"
         fi
 
-        # Rsync to server
-        rsync -z "$source_path" "$DEPLOY_USER@$DEPLOY_HOST:$REMOTE_OSD_PATH/${variant}.tar"
+        # Rsync to server (--chmod ensures files are world-readable for nginx)
+        rsync -z --chmod=F644 "$source_path" "$DEPLOY_USER@$DEPLOY_HOST:$REMOTE_OSD_PATH/${variant}.tar"
         log "  Deployed: $package_name -> ${variant}.tar"
     done
 
     # Deploy pip_override.json (config overrides for PiP views)
     local pip_override="$PROJECT_ROOT/resources/pip_override.json"
     if [[ -f "$pip_override" ]]; then
-        rsync -z "$pip_override" "$DEPLOY_USER@$DEPLOY_HOST:$REMOTE_OSD_PATH/pip_override.json"
+        rsync -z --chmod=F644 "$pip_override" "$DEPLOY_USER@$DEPLOY_HOST:$REMOTE_OSD_PATH/pip_override.json"
         log "  Deployed: pip_override.json"
     fi
 
@@ -172,8 +172,8 @@ deploy_to_gallery() {
         error "Package not found: $source_path"
     fi
 
-    # Rsync to server
-    rsync -z "$source_path" "$DEPLOY_USER@$DEPLOY_HOST:$REMOTE_OSD_PATH/default.tar"
+    # Rsync to server (--chmod ensures files are world-readable for nginx)
+    rsync -z --chmod=F644 "$source_path" "$DEPLOY_USER@$DEPLOY_HOST:$REMOTE_OSD_PATH/default.tar"
     log "  Deployed: $package_name -> default.tar"
 
     log "Gallery deploy complete"
