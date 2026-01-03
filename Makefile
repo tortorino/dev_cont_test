@@ -170,10 +170,6 @@ package-all-dev: all-dev
 -include .env
 export
 
-# Deploy paths (can be overridden via environment or .env)
-FRONTEND_DEPLOY_PATH ?= /home/jare/git/cc/jettison_frontend/frontend/static/osd
-GALLERY_DEPLOY_PATH ?= /home/jare/git/cc/gallery_demo_basic/web/public/osd
-
 # Deploy dev builds (live variants to frontend, recording_day to gallery)
 deploy: package-all-dev
 	@echo "=== Deploying dev packages ==="

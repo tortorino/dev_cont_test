@@ -81,6 +81,41 @@ get_package_name() {
 }
 
 # ============================================================================
+# SSH Connectivity Check
+# ============================================================================
+
+check_ssh() {
+    log "Checking SSH connectivity to $DEPLOY_USER@$DEPLOY_HOST..."
+
+    if ! ssh -o BatchMode=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=no \
+         "$DEPLOY_USER@$DEPLOY_HOST" "echo 'SSH OK'" >/dev/null 2>&1; then
+        echo ""
+        echo "=============================================="
+        echo "  SSH CONNECTION FAILED"
+        echo "=============================================="
+        echo ""
+        echo "Could not connect to: $DEPLOY_USER@$DEPLOY_HOST"
+        echo ""
+        echo "Possible causes:"
+        echo "  1. SSH key requires passphrase but ssh-agent not running"
+        echo "  2. SSH key not added to agent"
+        echo "  3. Host unreachable or wrong IP"
+        echo "  4. SSH key not authorized on remote host"
+        echo ""
+        echo "To fix passphrase-protected SSH keys:"
+        echo "  eval \$(ssh-agent)     # Start ssh-agent (if not running)"
+        echo "  ssh-add ~/.ssh/id_*   # Add your key (will prompt for passphrase once)"
+        echo ""
+        echo "To test manually:"
+        echo "  ssh $DEPLOY_USER@$DEPLOY_HOST"
+        echo ""
+        exit 1
+    fi
+
+    log "✓ SSH connection verified"
+}
+
+# ============================================================================
 # Deploy Functions
 # ============================================================================
 
@@ -173,6 +208,9 @@ main() {
     log "Source: $DIST_DIR"
     log "Server: $DEPLOY_USER@$DEPLOY_HOST"
     log ""
+
+    # Pre-flight SSH check
+    check_ssh
 
     # Deploy based on target
     case "$target" in
