@@ -345,15 +345,11 @@ Or via devcontainer wrapper:
 
 ### What Gets Deployed
 
-**To sych.local:/home/archer/web/www/osd/packages/ (frontend):**
+**To sych.local:/home/archer/web/osd/ (centralized OSD packages):**
 ```
 live_day.tar              # For jettison_frontend live streams
 live_thermal.tar
 pip_override.json         # PiP view config overrides
-```
-
-**To sych.local:/home/archer/web/www/mp4-sei/osd/ (gallery):**
-```
 default.tar               # Gallery loads this on startup (recording_day)
 ```
 
@@ -375,16 +371,16 @@ The `resources/pip_override.json` file contains config overrides for Picture-in-
 ```
 
 **How it works:**
-1. Deploy script rsyncs `pip_override.json` to `/osd/packages/` on sych.local
+1. Deploy script rsyncs `pip_override.json` to `/osd/` on sych.local
 2. OSD worker detects `viewType === 'pip'` from worker config
-3. Worker fetches `/osd/packages/pip_override.json` and merges it on top of base config
+3. Worker fetches `/osd/pip_override.json` and merges it on top of base config
 4. Result: PiP views only show crosshair, main views show all enabled widgets
 
 **Editing:** Modify `resources/pip_override.json` and run `make deploy` to apply changes.
 
 ### Hot-Reload
 
-The frontend loads OSD from signed packages (`/osd/packages/*.tar`) and polls for changes via HEAD requests. When a package changes:
+The frontend loads OSD from signed packages (`/osd/*.tar`) and receives change notifications via SSE. When a package changes:
 1. Worker detects ETag/Last-Modified change
 2. Worker sends `packageChanged` event
 3. OSDManager terminates and recreates worker with new package
