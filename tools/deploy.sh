@@ -114,9 +114,9 @@ deploy_to_frontend() {
         log "  Deployed: pip_override.json"
     fi
 
-    # Touch all files to ensure new mtime (triggers hot-reload via ETag change)
-    ssh "$DEPLOY_USER@$DEPLOY_HOST" "touch $REMOTE_FRONTEND_PATH/live_day.tar $REMOTE_FRONTEND_PATH/live_thermal.tar $REMOTE_FRONTEND_PATH/pip_override.json 2>/dev/null || true"
-    log "Frontend deploy complete (files touched for hot-reload)"
+    # Note: Hot-reload is now handled via SSE (dev_notifications service watches file changes)
+    # rsync already updates mtime when file content changes
+    log "Frontend deploy complete"
 }
 
 deploy_to_gallery() {
