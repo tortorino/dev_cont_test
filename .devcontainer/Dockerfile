@@ -43,6 +43,9 @@ RUN apt-get update && apt-get install -y \
     # Video processing
     ffmpeg \
     bc \
+    # Deployment tools
+    rsync \
+    openssh-client \
     # Dev UX tools
     vim \
     nano \
