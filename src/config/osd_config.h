@@ -86,6 +86,7 @@ typedef struct
   int pos_x;
   int pos_y;
   uint32_t color;
+  uint32_t outline_color;
   int font_size;
   char font_path[256];
 } variant_info_config_t;

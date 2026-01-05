@@ -122,12 +122,13 @@
       "type": "object",
       "title": "Variant Info",
       "x-ui-level": "top",
-      "required": ["enabled", "position_x", "position_y", "color", "font_size", "font"],
+      "required": ["enabled", "position_x", "position_y", "color", "outline_color", "font_size", "font"],
       "properties": {
         "enabled": { "type": "boolean", "title": "Enabled" },
         "position_x": { "type": "integer", "title": "Position X", "minimum": 0, "maximum": 3840 },
         "position_y": { "type": "integer", "title": "Position Y", "minimum": 0, "maximum": 2160 },
         "color": { "$ref": "#/definitions/argb_color", "title": "Color" },
+        "outline_color":{"$ref": "#/definitions/argb_color", "title": "Outline color" },
         "font_size": { "type": "integer", "title": "Font Size", "minimum": 8, "maximum": 128 },
         "font": {
           "type": "string",

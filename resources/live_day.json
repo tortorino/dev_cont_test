@@ -45,6 +45,7 @@
     "position_x": 10,
     "position_y": 50,
     "color": "#FFFFFF00",
+    "outline_color": "#FFFF0000",
     "font_size": 21,
     "font": "liberation_sans_bold"
   },

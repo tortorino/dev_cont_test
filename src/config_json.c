@@ -322,10 +322,12 @@ parse_variant_info_config(cJSON *root, variant_info_config_t *config)
   if (!variant_info)
     return;
 
-  config->enabled   = get_bool(variant_info, "enabled", true);
-  config->pos_x     = get_int(variant_info, "position_x", 10);
-  config->pos_y     = get_int(variant_info, "position_y", 50);
-  config->color     = get_color(variant_info, "color", COLOR_YELLOW);
+  config->enabled = get_bool(variant_info, "enabled", true);
+  config->pos_x   = get_int(variant_info, "position_x", 10);
+  config->pos_y   = get_int(variant_info, "position_y", 50);
+  config->color   = get_color(variant_info, "color", COLOR_YELLOW);
+  config->outline_color
+    = get_color(variant_info, "outline_color", COLOR_MAGENTA);
   config->font_size = get_int(variant_info, "font_size", 14);
 
   // Parse font name and resolve to path using registry

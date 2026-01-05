@@ -107,11 +107,12 @@ variant_info_render(osd_context_t *ctx, const osd_state_t *state)
   framebuffer_t fb;
   framebuffer_init(&fb, ctx->framebuffer, ctx->width, ctx->height);
 
-  int x                 = ctx->config.variant_info.pos_x;
-  int y                 = ctx->config.variant_info.pos_y;
-  const uint32_t color  = ctx->config.variant_info.color;
-  const int font_size   = ctx->config.variant_info.font_size;
-  const int line_height = font_size + VARIANT_INFO_LINE_SPACING;
+  int x                        = ctx->config.variant_info.pos_x;
+  int y                        = ctx->config.variant_info.pos_y;
+  const uint32_t color         = ctx->config.variant_info.color;
+  const uint32_t outline_color = ctx->config.variant_info.outline_color;
+  const int font_size          = ctx->config.variant_info.font_size;
+  const int line_height        = font_size + VARIANT_INFO_LINE_SPACING;
 
   // Buffer for text rendering
   char buffer[256];
@@ -120,8 +121,8 @@ variant_info_render(osd_context_t *ctx, const osd_state_t *state)
   const char *variant_name = get_variant_name();
   snprintf(buffer, sizeof(buffer), "Variant: %s", variant_name);
   text_render_with_outline(&fb, &ctx->font_variant_info, buffer, x, y, color,
-                           0xFF000000, // Black outline
-                           font_size,  //
+                           outline_color, // Black outline
+                           font_size,     //
                            VARIANT_INFO_OUTLINE_THICKNESS);
 
   y += line_height;
@@ -219,17 +220,17 @@ variant_info_render(osd_context_t *ctx, const osd_state_t *state)
       snprintf(buffer, sizeof(buffer), "%s: %s", items[i].key, items[i].value);
       text_render_with_outline(&fb, &ctx->font_variant_info, buffer, x, y,
                                color,
-                               0xFF000000, // Black outline
-                               font_size,  //
+                               outline_color, // Black outline
+                               font_size,     //
                                VARIANT_INFO_OUTLINE_THICKNESS);
 
       y += line_height;
     }
 
   // Render redraw warning at bottom
-  text_render_with_outline(&fb, &ctx->font_variant_info, "[FORCES REPAINTS]", x,
-                           y, color,
-                           0xFF000000, // Black outline
+  text_render_with_outline(&fb, &ctx->font_variant_info, "[FORCES !! REPAINTS]",
+                           x, y, color,
+                           0x00000000, // Black outline
                            font_size,  //
                            VARIANT_INFO_OUTLINE_THICKNESS);
 
