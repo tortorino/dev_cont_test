@@ -18,6 +18,19 @@
 #define VARIANT_INFO_LINE_SPACING 4      // Vertical spacing between lines
 #define VARIANT_INFO_OUTLINE_THICKNESS 1 // Outline thickness for text
 
+// Delta averaging constants
+#define DELTA_HISTORY_SIZE 150    // ~5 seconds at 30fps
+#define DELTA_WINDOW_US 5000000UL // 5 seconds in microseconds
+
+// Ring buffer for delta averaging
+static struct
+{
+  double delta_ms[DELTA_HISTORY_SIZE];
+  uint64_t timestamp_us[DELTA_HISTORY_SIZE];
+  int write_idx;
+  int count;
+} delta_history = { 0 };
+
 // Build info defaults (set by build.sh via -D defines)
 #ifndef OSD_VERSION
 #define OSD_VERSION "unknown"
@@ -31,6 +44,58 @@
 #ifndef OSD_BUILD_TIME
 #define OSD_BUILD_TIME "unknown"
 #endif
+
+/**
+ * Add a delta sample to the history buffer
+ */
+static void
+delta_history_add(double delta_ms, uint64_t timestamp_us)
+{
+  delta_history.delta_ms[delta_history.write_idx]     = delta_ms;
+  delta_history.timestamp_us[delta_history.write_idx] = timestamp_us;
+  delta_history.write_idx = (delta_history.write_idx + 1) % DELTA_HISTORY_SIZE;
+  if (delta_history.count < DELTA_HISTORY_SIZE)
+    {
+      delta_history.count++;
+    }
+}
+
+/**
+ * Calculate average delta over the last 5 seconds
+ * @param current_us Current monotonic time in microseconds
+ * @param out_avg Output: average delta in ms (only valid if return is true)
+ * @return true if average is available, false if no samples in window
+ */
+static bool
+delta_history_average(uint64_t current_us, double *out_avg)
+{
+  if (delta_history.count == 0)
+    {
+      return false;
+    }
+
+  double sum      = 0.0;
+  int valid_count = 0;
+  uint64_t cutoff
+    = (current_us > DELTA_WINDOW_US) ? (current_us - DELTA_WINDOW_US) : 0;
+
+  for (int i = 0; i < delta_history.count; i++)
+    {
+      if (delta_history.timestamp_us[i] >= cutoff)
+        {
+          sum += delta_history.delta_ms[i];
+          valid_count++;
+        }
+    }
+
+  if (valid_count == 0)
+    {
+      return false;
+    }
+
+  *out_avg = sum / (double)valid_count;
+  return true;
+}
 
 // Determine variant name from compile-time defines
 static const char *
@@ -165,7 +230,21 @@ variant_info_render(osd_context_t *ctx, const osd_state_t *state)
       // Delta in microseconds (positive = frame is older than state)
       int64_t delta_us = (int64_t)monotonic_us - (int64_t)frame_us;
       double delta_ms  = (double)delta_us / 1000.0;
-      snprintf(items[2].value, sizeof(items[2].value), "%.2f ms", delta_ms);
+
+      // Add to history for averaging
+      delta_history_add(delta_ms, monotonic_us);
+
+      // Get average over last 5 seconds
+      double avg_ms;
+      if (delta_history_average(monotonic_us, &avg_ms))
+        {
+          snprintf(items[2].value, sizeof(items[2].value),
+                   "%.1f ms (avg %.1f ms)", delta_ms, avg_ms);
+        }
+      else
+        {
+          snprintf(items[2].value, sizeof(items[2].value), "%.2f ms", delta_ms);
+        }
     }
   else
     {
