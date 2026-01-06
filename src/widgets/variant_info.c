@@ -155,10 +155,10 @@ variant_info_render(osd_context_t *ctx, const osd_state_t *state)
   // Frame timing delta (shows frame age relative to state time)
 #ifdef OSD_STREAM_THERMAL
   uint64_t frame_us       = osd_state_get_frame_monotonic_heat_us(state);
-  const char *frame_label = "Heat Frame Δ";
+  const char *frame_label = "Heat Frame dt";
 #else
   uint64_t frame_us       = osd_state_get_frame_monotonic_day_us(state);
-  const char *frame_label = "Day Frame Δ";
+  const char *frame_label = "Day Frame dt";
 #endif
   if (frame_us > 0 && monotonic_us > 0)
     {
