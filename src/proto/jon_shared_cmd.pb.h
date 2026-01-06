@@ -13,6 +13,7 @@
 #include "jon_shared_cmd_lrf.pb.h"
 #include "jon_shared_cmd_lrf_align.pb.h"
 #include "jon_shared_cmd_osd.pb.h"
+#include "jon_shared_cmd_power.pb.h"
 #include "jon_shared_cmd_rotary.pb.h"
 #include "jon_shared_cmd_system.pb.h"
 #include "jon_shared_data_types.pb.h"
@@ -54,6 +55,7 @@ typedef struct _cmd_Root
   /* Client wall-clock time when command was issued */
   uint64_t client_time_ms; /* Client epoch time in milliseconds (from
                               performance.timeOrigin + performance.now()) */
+  ser_JonGuiDataClientApp client_app;
   pb_size_t which_payload;
   union
   {
@@ -72,6 +74,7 @@ typedef struct _cmd_Root
     cmd_CV_Root cv;
     cmd_DayCamGlassHeater_Root day_cam_glass_heater;
     cmd_Lira_Root lira;
+    cmd_Power_Root power;
   } payload;
 } cmd_Root;
 
@@ -82,12 +85,13 @@ extern "C"
 #endif
 
 /* Initializer values for message structs */
-#define cmd_Root_init_default                                 \
-  {                                                           \
-    0, 0, 0, 0, _ser_JonGuiDataClientType_MIN, 0, 0, 0, 0, 0, \
-    {                                                         \
-      cmd_DayCamera_Root_init_default                         \
-    }                                                         \
+#define cmd_Root_init_default                              \
+  {                                                        \
+    0, 0, 0, 0, _ser_JonGuiDataClientType_MIN, 0, 0, 0, 0, \
+      _ser_JonGuiDataClientApp_MIN, 0,                     \
+    {                                                      \
+      cmd_DayCamera_Root_init_default                      \
+    }                                                      \
   }
 #define cmd_Ping_init_default \
   {                           \
@@ -101,12 +105,13 @@ extern "C"
   {                             \
     0                           \
   }
-#define cmd_Root_init_zero                                    \
-  {                                                           \
-    0, 0, 0, 0, _ser_JonGuiDataClientType_MIN, 0, 0, 0, 0, 0, \
-    {                                                         \
-      cmd_DayCamera_Root_init_zero                            \
-    }                                                         \
+#define cmd_Root_init_zero                                 \
+  {                                                        \
+    0, 0, 0, 0, _ser_JonGuiDataClientType_MIN, 0, 0, 0, 0, \
+      _ser_JonGuiDataClientApp_MIN, 0,                     \
+    {                                                      \
+      cmd_DayCamera_Root_init_zero                         \
+    }                                                      \
   }
 #define cmd_Ping_init_zero \
   {                        \
@@ -131,6 +136,7 @@ extern "C"
 #define cmd_Root_frame_time_heat_tag 7
 #define cmd_Root_state_time_tag 8
 #define cmd_Root_client_time_ms_tag 9
+#define cmd_Root_client_app_tag 10
 #define cmd_Root_day_camera_tag 20
 #define cmd_Root_heat_camera_tag 21
 #define cmd_Root_gps_tag 22
@@ -146,6 +152,7 @@ extern "C"
 #define cmd_Root_cv_tag 32
 #define cmd_Root_day_cam_glass_heater_tag 33
 #define cmd_Root_lira_tag 34
+#define cmd_Root_power_tag 35
 
 /* Struct field encoding specification for nanopb */
 #define cmd_Root_FIELDLIST(X, a)                                              \
@@ -158,6 +165,7 @@ extern "C"
   X(a, STATIC, SINGULAR, UINT64, frame_time_heat, 7)                          \
   X(a, STATIC, SINGULAR, UINT64, state_time, 8)                               \
   X(a, STATIC, SINGULAR, UINT64, client_time_ms, 9)                           \
+  X(a, STATIC, SINGULAR, UENUM, client_app, 10)                               \
   X(a, STATIC, ONEOF, MESSAGE, (payload, day_camera, payload.day_camera), 20) \
   X(a, STATIC, ONEOF, MESSAGE, (payload, heat_camera, payload.heat_camera),   \
     21)                                                                       \
@@ -174,7 +182,8 @@ extern "C"
   X(a, STATIC, ONEOF, MESSAGE, (payload, cv, payload.cv), 32)                 \
   X(a, STATIC, ONEOF, MESSAGE,                                                \
     (payload, day_cam_glass_heater, payload.day_cam_glass_heater), 33)        \
-  X(a, STATIC, ONEOF, MESSAGE, (payload, lira, payload.lira), 34)
+  X(a, STATIC, ONEOF, MESSAGE, (payload, lira, payload.lira), 34)             \
+  X(a, STATIC, ONEOF, MESSAGE, (payload, power, payload.power), 35)
 #define cmd_Root_CALLBACK NULL
 #define cmd_Root_DEFAULT NULL
 #define cmd_Root_payload_day_camera_MSGTYPE cmd_DayCamera_Root
@@ -192,6 +201,7 @@ extern "C"
 #define cmd_Root_payload_cv_MSGTYPE cmd_CV_Root
 #define cmd_Root_payload_day_cam_glass_heater_MSGTYPE cmd_DayCamGlassHeater_Root
 #define cmd_Root_payload_lira_MSGTYPE cmd_Lira_Root
+#define cmd_Root_payload_power_MSGTYPE cmd_Power_Root
 
 #define cmd_Ping_FIELDLIST(X, a)
 
@@ -224,7 +234,7 @@ extern "C"
 #define cmd_Frozen_size 0
 #define cmd_Noop_size 0
 #define cmd_Ping_size 0
-#define cmd_Root_size 178
+#define cmd_Root_size 180
 
 #ifdef __cplusplus
 } /* extern "C" */

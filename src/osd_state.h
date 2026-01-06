@@ -89,4 +89,10 @@ bool osd_state_get_gps(const osd_state_t *state, osd_gps_position_t *pos);
 // Returns: monotonic time in microseconds, or 0 if invalid
 uint64_t osd_state_get_monotonic_time_us(const osd_state_t *state);
 
+// Get frame monotonic capture time
+// Returns: monotonic time in microseconds when frame was captured, or 0 if
+// invalid
+uint64_t osd_state_get_frame_monotonic_day_us(const osd_state_t *state);
+uint64_t osd_state_get_frame_monotonic_heat_us(const osd_state_t *state);
+
 #endif // OSD_STATE_H

@@ -36,6 +36,8 @@ typedef struct _ser_JonGuiDataSystem {
     bool cv_dumping;
     bool recognition_mode;
     ser_JonGuiDataAccumulatorStateIdx accumulator_state;
+    int32_t ext_bat_capacity;
+    ser_JonGuiDataExtBatStatus ext_bat_status;
 } ser_JonGuiDataSystem;
 
 
@@ -44,8 +46,8 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define ser_JonGuiDataSystem_init_default        {0, 0, 0, 0, 0, _ser_JonGuiDataSystemLocalizations_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _ser_JonGuiDataAccumulatorStateIdx_MIN}
-#define ser_JonGuiDataSystem_init_zero           {0, 0, 0, 0, 0, _ser_JonGuiDataSystemLocalizations_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _ser_JonGuiDataAccumulatorStateIdx_MIN}
+#define ser_JonGuiDataSystem_init_default        {0, 0, 0, 0, 0, _ser_JonGuiDataSystemLocalizations_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _ser_JonGuiDataAccumulatorStateIdx_MIN, 0, _ser_JonGuiDataExtBatStatus_MIN}
+#define ser_JonGuiDataSystem_init_zero           {0, 0, 0, 0, 0, _ser_JonGuiDataSystemLocalizations_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _ser_JonGuiDataAccumulatorStateIdx_MIN, 0, _ser_JonGuiDataExtBatStatus_MIN}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define ser_JonGuiDataSystem_cpu_temperature_tag 1
@@ -72,6 +74,8 @@ extern "C" {
 #define ser_JonGuiDataSystem_cv_dumping_tag      22
 #define ser_JonGuiDataSystem_recognition_mode_tag 23
 #define ser_JonGuiDataSystem_accumulator_state_tag 24
+#define ser_JonGuiDataSystem_ext_bat_capacity_tag 25
+#define ser_JonGuiDataSystem_ext_bat_status_tag  26
 
 /* Struct field encoding specification for nanopb */
 #define ser_JonGuiDataSystem_FIELDLIST(X, a) \
@@ -98,7 +102,9 @@ X(a, STATIC,   SINGULAR, BOOL,     stabilization_mode,  20) \
 X(a, STATIC,   SINGULAR, BOOL,     geodesic_mode,    21) \
 X(a, STATIC,   SINGULAR, BOOL,     cv_dumping,       22) \
 X(a, STATIC,   SINGULAR, BOOL,     recognition_mode,  23) \
-X(a, STATIC,   SINGULAR, UENUM,    accumulator_state,  24)
+X(a, STATIC,   SINGULAR, UENUM,    accumulator_state,  24) \
+X(a, STATIC,   SINGULAR, INT32,    ext_bat_capacity,  25) \
+X(a, STATIC,   SINGULAR, UENUM,    ext_bat_status,   26)
 #define ser_JonGuiDataSystem_CALLBACK NULL
 #define ser_JonGuiDataSystem_DEFAULT NULL
 
@@ -109,7 +115,7 @@ extern const pb_msgdesc_t ser_JonGuiDataSystem_msg;
 
 /* Maximum encoded size of messages (where known) */
 #define SER_JON_SHARED_DATA_SYSTEM_PB_H_MAX_SIZE ser_JonGuiDataSystem_size
-#define ser_JonGuiDataSystem_size                155
+#define ser_JonGuiDataSystem_size                170
 
 #ifdef __cplusplus
 } /* extern "C" */

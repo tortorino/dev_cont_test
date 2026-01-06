@@ -57,6 +57,7 @@ typedef struct _ser_JonGuiDataLrf
   bool fogModeEnabled;
   bool is_refining;
   bool is_continuous_measuring;
+  bool is_started;
 } ser_JonGuiDataLrf;
 
 
@@ -66,10 +67,10 @@ extern "C"
 #endif
 
 /* Initializer values for message structs */
-#define ser_JonGuiDataLrf_init_default                  \
-  {                                                     \
-    0, 0, 0, false, ser_JonGuiDataTarget_init_default,  \
-      _ser_JonGuiDatatLrfLaserPointerModes_MIN, 0, 0, 0 \
+#define ser_JonGuiDataLrf_init_default                     \
+  {                                                        \
+    0, 0, 0, false, ser_JonGuiDataTarget_init_default,     \
+      _ser_JonGuiDatatLrfLaserPointerModes_MIN, 0, 0, 0, 0 \
   }
 #define ser_JonGuiDataTarget_init_default                                    \
   {                                                                          \
@@ -80,10 +81,10 @@ extern "C"
   {                               \
     0, 0, 0                       \
   }
-#define ser_JonGuiDataLrf_init_zero                     \
-  {                                                     \
-    0, 0, 0, false, ser_JonGuiDataTarget_init_zero,     \
-      _ser_JonGuiDatatLrfLaserPointerModes_MIN, 0, 0, 0 \
+#define ser_JonGuiDataLrf_init_zero                        \
+  {                                                        \
+    0, 0, 0, false, ser_JonGuiDataTarget_init_zero,        \
+      _ser_JonGuiDatatLrfLaserPointerModes_MIN, 0, 0, 0, 0 \
   }
 #define ser_JonGuiDataTarget_init_zero                                       \
   {                                                                          \
@@ -128,17 +129,19 @@ extern "C"
 #define ser_JonGuiDataLrf_fogModeEnabled_tag 6
 #define ser_JonGuiDataLrf_is_refining_tag 7
 #define ser_JonGuiDataLrf_is_continuous_measuring_tag 8
+#define ser_JonGuiDataLrf_is_started_tag 9
 
 /* Struct field encoding specification for nanopb */
-#define ser_JonGuiDataLrf_FIELDLIST(X, a)         \
-  X(a, STATIC, SINGULAR, BOOL, is_scanning, 1)    \
-  X(a, STATIC, SINGULAR, BOOL, is_measuring, 2)   \
-  X(a, STATIC, SINGULAR, INT32, measure_id, 3)    \
-  X(a, STATIC, OPTIONAL, MESSAGE, target, 4)      \
-  X(a, STATIC, SINGULAR, UENUM, pointer_mode, 5)  \
-  X(a, STATIC, SINGULAR, BOOL, fogModeEnabled, 6) \
-  X(a, STATIC, SINGULAR, BOOL, is_refining, 7)    \
-  X(a, STATIC, SINGULAR, BOOL, is_continuous_measuring, 8)
+#define ser_JonGuiDataLrf_FIELDLIST(X, a)                  \
+  X(a, STATIC, SINGULAR, BOOL, is_scanning, 1)             \
+  X(a, STATIC, SINGULAR, BOOL, is_measuring, 2)            \
+  X(a, STATIC, SINGULAR, INT32, measure_id, 3)             \
+  X(a, STATIC, OPTIONAL, MESSAGE, target, 4)               \
+  X(a, STATIC, SINGULAR, UENUM, pointer_mode, 5)           \
+  X(a, STATIC, SINGULAR, BOOL, fogModeEnabled, 6)          \
+  X(a, STATIC, SINGULAR, BOOL, is_refining, 7)             \
+  X(a, STATIC, SINGULAR, BOOL, is_continuous_measuring, 8) \
+  X(a, STATIC, SINGULAR, BOOL, is_started, 9)
 #define ser_JonGuiDataLrf_CALLBACK NULL
 #define ser_JonGuiDataLrf_DEFAULT NULL
 #define ser_JonGuiDataLrf_target_MSGTYPE ser_JonGuiDataTarget
@@ -187,7 +190,7 @@ extern "C"
 
 /* Maximum encoded size of messages (where known) */
 #define SER_JON_SHARED_DATA_LRF_PB_H_MAX_SIZE ser_JonGuiDataLrf_size
-#define ser_JonGuiDataLrf_size 236
+#define ser_JonGuiDataLrf_size 238
 #define ser_JonGuiDataTarget_size 210
 #define ser_RgbColor_size 18
 

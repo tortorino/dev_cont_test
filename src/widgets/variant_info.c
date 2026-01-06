@@ -140,7 +140,7 @@ variant_info_render(osd_context_t *ctx, const osd_state_t *state)
   {
     const char *key;
     char value[128];
-  } items[16];
+  } items[17];
 
   // Draw counter (increments each state update/render cycle)
   snprintf(items[0].value, sizeof(items[0].value), "%u", ctx->frame_count);
@@ -152,66 +152,87 @@ variant_info_render(osd_context_t *ctx, const osd_state_t *state)
            monotonic_us);
   items[1].key = "State Time";
 
-  snprintf(items[2].value, sizeof(items[2].value), "%ux%u", ctx->width,
+  // Frame timing delta (shows frame age relative to state time)
+#ifdef OSD_STREAM_THERMAL
+  uint64_t frame_us       = osd_state_get_frame_monotonic_heat_us(state);
+  const char *frame_label = "Heat Frame Δ";
+#else
+  uint64_t frame_us       = osd_state_get_frame_monotonic_day_us(state);
+  const char *frame_label = "Day Frame Δ";
+#endif
+  if (frame_us > 0 && monotonic_us > 0)
+    {
+      // Delta in microseconds (positive = frame is older than state)
+      int64_t delta_us = (int64_t)monotonic_us - (int64_t)frame_us;
+      double delta_ms  = (double)delta_us / 1000.0;
+      snprintf(items[2].value, sizeof(items[2].value), "%.2f ms", delta_ms);
+    }
+  else
+    {
+      snprintf(items[2].value, sizeof(items[2].value), "N/A");
+    }
+  items[2].key = frame_label;
+
+  snprintf(items[3].value, sizeof(items[3].value), "%ux%u", ctx->width,
            ctx->height);
-  items[2].key = "Resolution";
+  items[3].key = "Resolution";
 
 #ifdef OSD_MODE_LIVE
-  snprintf(items[3].value, sizeof(items[3].value), "Live");
+  snprintf(items[4].value, sizeof(items[4].value), "Live");
 #else
-  snprintf(items[3].value, sizeof(items[3].value), "Recording");
+  snprintf(items[4].value, sizeof(items[4].value), "Recording");
 #endif
-  items[3].key = "Mode";
-
-  snprintf(items[4].value, sizeof(items[4].value), "%s",
-           ctx->config.crosshair.enabled ? "Enabled" : "Disabled");
-  items[4].key = "Crosshair";
+  items[4].key = "Mode";
 
   snprintf(items[5].value, sizeof(items[5].value), "%s",
-           ctx->config.timestamp.enabled ? "Enabled" : "Disabled");
-  items[5].key = "Timestamp";
+           ctx->config.crosshair.enabled ? "Enabled" : "Disabled");
+  items[5].key = "Crosshair";
 
   snprintf(items[6].value, sizeof(items[6].value), "%s",
-           ctx->config.speed_indicators.enabled ? "Enabled" : "Disabled");
-  items[6].key = "Speed Indicators";
+           ctx->config.timestamp.enabled ? "Enabled" : "Disabled");
+  items[6].key = "Timestamp";
 
   snprintf(items[7].value, sizeof(items[7].value), "%s",
+           ctx->config.speed_indicators.enabled ? "Enabled" : "Disabled");
+  items[7].key = "Speed Indicators";
+
+  snprintf(items[8].value, sizeof(items[8].value), "%s",
            ctx->config.navball.enabled ? "Enabled" : "Disabled");
-  items[7].key = "Navball";
+  items[8].key = "Navball";
 
-  snprintf(items[8].value, sizeof(items[8].value), "%d, %d",
+  snprintf(items[9].value, sizeof(items[9].value), "%d, %d",
            ctx->config.navball.position_x, ctx->config.navball.position_y);
-  items[8].key = "Navball Pos";
+  items[9].key = "Navball Pos";
 
-  snprintf(items[9].value, sizeof(items[9].value), "%dpx",
+  snprintf(items[10].value, sizeof(items[10].value), "%dpx",
            ctx->config.navball.size);
-  items[9].key = "Navball Size";
+  items[10].key = "Navball Size";
 
   // Speed debug info (always shown)
   // Speeds from proto are normalized (-1.0 to 1.0)
   // Display both normalized and degrees (normalized * 35.0)
-  snprintf(items[10].value, sizeof(items[10].value), "%s",
+  snprintf(items[11].value, sizeof(items[11].value), "%s",
            is_moving ? "YES" : "NO");
-  items[10].key = "Is Moving";
-
-  snprintf(items[11].value, sizeof(items[11].value), "%.3f (%.1f deg)",
-           az_speed, az_speed * 35.0);
-  items[11].key = "Az Speed";
+  items[11].key = "Is Moving";
 
   snprintf(items[12].value, sizeof(items[12].value), "%.3f (%.1f deg)",
+           az_speed, az_speed * 35.0);
+  items[12].key = "Az Speed";
+
+  snprintf(items[13].value, sizeof(items[13].value), "%.3f (%.1f deg)",
            el_speed, el_speed * 35.0);
-  items[12].key = "El Speed";
+  items[13].key = "El Speed";
 
   // Build info (compile-time constants)
-  snprintf(items[13].value, sizeof(items[13].value), "%s", OSD_VERSION);
-  items[13].key = "Version";
+  snprintf(items[14].value, sizeof(items[14].value), "%s", OSD_VERSION);
+  items[14].key = "Version";
 
-  snprintf(items[14].value, sizeof(items[14].value), "%s", OSD_GIT_COMMIT);
-  items[14].key = "Commit";
+  snprintf(items[15].value, sizeof(items[15].value), "%s", OSD_GIT_COMMIT);
+  items[15].key = "Commit";
 
-  snprintf(items[15].value, sizeof(items[15].value), "%s %s UTC",
+  snprintf(items[16].value, sizeof(items[16].value), "%s %s UTC",
            OSD_BUILD_DATE, OSD_BUILD_TIME);
-  items[15].key = "Built";
+  items[16].key = "Built";
 
   // Render each config item
   for (size_t i = 0; i < sizeof(items) / sizeof(items[0]); i++)

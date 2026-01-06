@@ -164,9 +164,10 @@ Note: `variant_info_render()` uses `const osd_state_t *state` since it doesn't m
 
 ### Variant Info (`src/widgets/variant_info.c`)
 - Debug overlay showing variant name and config values
-- Displays: draw count, state time, resolution, mode, and widget enable states
+- Displays: draw count, state time, frame delta, resolution, mode, and widget enable states
 - Multi-line text with 1px outline, 4px line spacing
 - **Draw Count**: Increments each state update, useful for verifying render pipeline
+- **Frame Delta**: Shows latency between frame capture time and state time in milliseconds (variant-specific: Day or Heat)
 - **Always returns true**: When enabled, forces texture re-upload every frame (draw count changes each render)
 
 ## Protobuf Integration
@@ -218,6 +219,7 @@ Key settings:
 - Speed values: `rotary.azimuth_speed` / `rotary.elevation_speed` / `rotary.is_moving`
 - Crosshair offset: `rec_osd.day_crosshair_offset_*` / `rec_osd.heat_crosshair_offset_*`
 - Timestamp: `time.timestamp`
+- Frame timing: `system_monotonic_time_us` / `frame_monotonic_day_us` / `frame_monotonic_heat_us`
 
 ## Code Organization
 

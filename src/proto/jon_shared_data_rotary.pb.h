@@ -43,6 +43,7 @@ typedef struct _ser_JonGuiDataRotary
   double sun_elevation;
   bool has_current_scan_node;
   ser_ScanNode current_scan_node;
+  bool is_started;
 } ser_JonGuiDataRotary;
 
 
@@ -55,7 +56,7 @@ extern "C"
 #define ser_JonGuiDataRotary_init_default                                    \
   {                                                                          \
     0, 0, 0, 0, 0, 0, 0, 0, _ser_JonGuiDataRotaryMode_MIN, 0, 0, 0, 0, 0, 0, \
-      0, false, ser_ScanNode_init_default                                    \
+      0, false, ser_ScanNode_init_default, 0                                 \
   }
 #define ser_ScanNode_init_default \
   {                               \
@@ -64,7 +65,7 @@ extern "C"
 #define ser_JonGuiDataRotary_init_zero                                       \
   {                                                                          \
     0, 0, 0, 0, 0, 0, 0, 0, _ser_JonGuiDataRotaryMode_MIN, 0, 0, 0, 0, 0, 0, \
-      0, false, ser_ScanNode_init_zero                                       \
+      0, false, ser_ScanNode_init_zero, 0                                    \
   }
 #define ser_ScanNode_init_zero \
   {                            \
@@ -96,6 +97,7 @@ extern "C"
 #define ser_JonGuiDataRotary_sun_azimuth_tag 15
 #define ser_JonGuiDataRotary_sun_elevation_tag 16
 #define ser_JonGuiDataRotary_current_scan_node_tag 17
+#define ser_JonGuiDataRotary_is_started_tag 18
 
 /* Struct field encoding specification for nanopb */
 #define ser_JonGuiDataRotary_FIELDLIST(X, a)              \
@@ -115,7 +117,8 @@ extern "C"
   X(a, STATIC, SINGULAR, INT32, scan_target_max, 14)      \
   X(a, STATIC, SINGULAR, DOUBLE, sun_azimuth, 15)         \
   X(a, STATIC, SINGULAR, DOUBLE, sun_elevation, 16)       \
-  X(a, STATIC, OPTIONAL, MESSAGE, current_scan_node, 17)
+  X(a, STATIC, OPTIONAL, MESSAGE, current_scan_node, 17)  \
+  X(a, STATIC, SINGULAR, BOOL, is_started, 18)
 #define ser_JonGuiDataRotary_CALLBACK NULL
 #define ser_JonGuiDataRotary_DEFAULT NULL
 #define ser_JonGuiDataRotary_current_scan_node_MSGTYPE ser_ScanNode
@@ -140,7 +143,7 @@ extern "C"
 
 /* Maximum encoded size of messages (where known) */
 #define SER_JON_SHARED_DATA_ROTARY_PB_H_MAX_SIZE ser_JonGuiDataRotary_size
-#define ser_JonGuiDataRotary_size 186
+#define ser_JonGuiDataRotary_size 189
 #define ser_ScanNode_size 69
 
 #ifdef __cplusplus
