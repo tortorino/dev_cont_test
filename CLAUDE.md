@@ -172,9 +172,11 @@ Note: `variant_info_render()` uses `const osd_state_t *state` since it doesn't m
 
 ## Protobuf Integration
 
-**Submodules**:
-- `proto/c/` - C nanopb bindings (27 file pairs)
-- `proto/ts/` - TypeScript bindings (ts-proto)
+**Git Submodules** (auto-updated by protogen CI):
+- `proto/c/` → [jettison_proto_c](https://github.com/lpportorino/jettison_proto_c) - C nanopb bindings
+- `proto/ts/` → [jettison_proto_typescript](https://github.com/lpportorino/jettison_proto_typescript) - TypeScript bindings (ts-proto)
+
+**Update protos**: `make proto` or `./tools/devcontainer-build.sh proto` (updates submodules to latest + syncs to src/proto)
 
 **Key message**: `JonGUIState` containing:
 - `actual_space_time` - **Primary orientation source** for navball: azimuth, elevation, bank, plus observer location (lat/lon/alt) and timestamp for celestial calculations
@@ -182,8 +184,6 @@ Note: `variant_info_render()` uses `const osd_state_t *state` since it doesn't m
 - `rotary` - Speed indicators: azimuth_speed, elevation_speed (normalized -1.0 to 1.0), is_moving flag
 - `time` - Timestamp display (Unix epoch)
 - `rec_osd` - Crosshair offsets: day_crosshair_offset_*, heat_crosshair_offset_*
-
-**Update protos**: `make proto` or `./tools/devcontainer-build.sh proto`
 
 ## Configuration (JSON)
 

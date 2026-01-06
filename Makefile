@@ -295,9 +295,11 @@ video-all: all-modes video-harness
 #==============================================================================
 
 proto:
-	@echo "=== Proto files ==="
-	@echo "Proto files are included directly in proto/c and proto/ts"
-	@echo "To update, replace files from source repositories"
+	@echo "=== Updating proto submodules ==="
+	git submodule update --remote --merge proto/c proto/ts
+	@echo "=== Syncing proto/c to src/proto ==="
+	@cp proto/c/*.pb.h proto/c/*.pb.c src/proto/
+	@echo "✅ Proto files updated from submodules"
 
 #==============================================================================
 # CI Targets (Full Pipeline)
