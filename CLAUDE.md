@@ -11,6 +11,34 @@ C-to-WebAssembly OSD (On-Screen Display) plugin for Jettison. Compiles to WASM u
 - 2 build modes (production/debug)
 - Cryptographic package signing (RSA-SHA256)
 
+## Claude Code Integration
+
+This project includes Claude Code skills and slash commands for streamlined development.
+
+### Skills
+
+Skills are auto-triggered based on context. Available in `.claude/skills/`:
+
+| Skill | Description |
+|-------|-------------|
+| `build-helper` | WASM compilation, build modes, packaging |
+| `deployment` | Deploy to sych.local, hot-reload workflow |
+| `config-management` | JSON config editing, schema, widget settings |
+| `protobuf` | Proto submodules, JonGUIState message structure |
+
+### Slash Commands
+
+Quick actions available via `/command`:
+
+| Command | Description |
+|---------|-------------|
+| `/build` | Build all 4 WASM variants |
+| `/deploy` | Build and deploy to sych.local |
+| `/test` | Generate PNG snapshots for all variants |
+| `/ci` | Run full CI pipeline (8 WASM + PNGs + videos) |
+| `/proto` | Update protobuf submodules |
+| `/shell` | Open interactive container shell |
+
 ## Build System
 
 **IMPORTANT**: All builds require Docker and the devcontainer CLI. Run builds from the HOST using `./tools/devcontainer-build.sh` - this script handles the Docker container automatically.
@@ -432,4 +460,4 @@ The frontend loads OSD from signed packages (`/osd/*.tar`) and receives change n
 ---
 
 **Build System**: Make + bash scripts
-**Last Updated**: 2025-01-03
+**Last Updated**: 2026-01-13
