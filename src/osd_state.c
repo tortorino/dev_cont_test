@@ -141,3 +141,21 @@ osd_state_get_monotonic_time_us(const osd_state_t *state)
 
   return state->system_monotonic_time_us;
 }
+
+uint64_t
+osd_state_get_frame_monotonic_day_us(const osd_state_t *state)
+{
+  if (!state)
+    return 0;
+
+  return state->frame_monotonic_day_us;
+}
+
+uint64_t
+osd_state_get_frame_monotonic_heat_us(const osd_state_t *state)
+{
+  if (!state)
+    return 0;
+
+  return state->frame_monotonic_heat_us;
+}

@@ -11,6 +11,34 @@ C-to-WebAssembly OSD (On-Screen Display) plugin for Jettison. Compiles to WASM u
 - 2 build modes (production/debug)
 - Cryptographic package signing (RSA-SHA256)
 
+## Claude Code Integration
+
+This project includes Claude Code skills and slash commands for streamlined development.
+
+### Skills
+
+Skills are auto-triggered based on context. Available in `.claude/skills/`:
+
+| Skill | Description |
+|-------|-------------|
+| `build-helper` | WASM compilation, build modes, packaging |
+| `deployment` | Deploy to sych.local, hot-reload workflow |
+| `config-management` | JSON config editing, schema, widget settings |
+| `protobuf` | Proto submodules, JonGUIState message structure |
+
+### Slash Commands
+
+Quick actions available via `/command`:
+
+| Command | Description |
+|---------|-------------|
+| `/build` | Build all 4 WASM variants |
+| `/deploy` | Build and deploy to sych.local |
+| `/test` | Generate PNG snapshots for all variants |
+| `/ci` | Run full CI pipeline (8 WASM + PNGs + videos) |
+| `/proto` | Update protobuf submodules |
+| `/shell` | Open interactive container shell |
+
 ## Build System
 
 **IMPORTANT**: All builds require Docker and the devcontainer CLI. Run builds from the HOST using `./tools/devcontainer-build.sh` - this script handles the Docker container automatically.
@@ -94,8 +122,8 @@ This runs `bear` on all 4 variants and merges the results with `jq`, capturing a
 
 | Mode | Flags | WASM Size | Package Size | Features |
 |------|-------|-----------|--------------|----------|
-| production | `-Oz -flto -DNDEBUG` | ~640 KB | ~900 KB | Optimized, no debug, no LOG_DEBUG/INFO |
-| dev | `-O1 -g -D_FORTIFY_SOURCE=2` | ~2.9 MB | ~3 MB | Debug symbols, sanitizers, all logging |
+| production | `-Oz -flto -DNDEBUG` | ~640 KB | ~960 KB | Optimized, no debug, no LOG_DEBUG/INFO |
+| dev | `-O1 -g -D_FORTIFY_SOURCE=2` | ~2.9 MB | ~1.7 MB | Debug symbols, sanitizers, all logging |
 
 **Logging behavior**:
 - Production: `LOG_DEBUG()` and `LOG_INFO()` compile to nothing (like `assert()`)
@@ -164,16 +192,19 @@ Note: `variant_info_render()` uses `const osd_state_t *state` since it doesn't m
 
 ### Variant Info (`src/widgets/variant_info.c`)
 - Debug overlay showing variant name and config values
-- Displays: draw count, state time, resolution, mode, and widget enable states
+- Displays: draw count, state time, frame delta, resolution, mode, and widget enable states
 - Multi-line text with 1px outline, 4px line spacing
 - **Draw Count**: Increments each state update, useful for verifying render pipeline
+- **Frame Delta**: Shows latency between frame capture time and state time in milliseconds (variant-specific: Day or Heat)
 - **Always returns true**: When enabled, forces texture re-upload every frame (draw count changes each render)
 
 ## Protobuf Integration
 
-**Submodules**:
-- `proto/c/` - C nanopb bindings (27 file pairs)
-- `proto/ts/` - TypeScript bindings (ts-proto)
+**Git Submodules** (auto-updated by protogen CI):
+- `proto/c/` → [jettison_proto_c](https://github.com/lpportorino/jettison_proto_c) - C nanopb bindings
+- `proto/ts/` → [jettison_proto_typescript](https://github.com/lpportorino/jettison_proto_typescript) - TypeScript bindings (ts-proto)
+
+**Update protos**: `make proto` or `./tools/devcontainer-build.sh proto` (updates submodules to latest + syncs to src/proto)
 
 **Key message**: `JonGUIState` containing:
 - `actual_space_time` - **Primary orientation source** for navball: azimuth, elevation, bank, plus observer location (lat/lon/alt) and timestamp for celestial calculations
@@ -181,8 +212,6 @@ Note: `variant_info_render()` uses `const osd_state_t *state` since it doesn't m
 - `rotary` - Speed indicators: azimuth_speed, elevation_speed (normalized -1.0 to 1.0), is_moving flag
 - `time` - Timestamp display (Unix epoch)
 - `rec_osd` - Crosshair offsets: day_crosshair_offset_*, heat_crosshair_offset_*
-
-**Update protos**: `make proto` or `./tools/devcontainer-build.sh proto`
 
 ## Configuration (JSON)
 
@@ -218,6 +247,7 @@ Key settings:
 - Speed values: `rotary.azimuth_speed` / `rotary.elevation_speed` / `rotary.is_moving`
 - Crosshair offset: `rec_osd.day_crosshair_offset_*` / `rec_osd.heat_crosshair_offset_*`
 - Timestamp: `time.timestamp`
+- Frame timing: `system_monotonic_time_us` / `frame_monotonic_day_us` / `frame_monotonic_heat_us`
 
 ## Code Organization
 
@@ -423,11 +453,11 @@ The frontend loads OSD from signed packages (`/osd/*.tar`) and receives change n
 
 ### Notes
 
-- Dev packages (~1.4MB) include debug symbols; production (~960KB) is optimized
+- Dev packages (~1.7MB) include debug symbols; production (~960KB) is optimized
 - Gallery only uses `recording_day` variant
 - Frontend uses `live_day` + `live_thermal` for live streams
 
 ---
 
 **Build System**: Make + bash scripts
-**Last Updated**: 2025-01-03
+**Last Updated**: 2026-01-13

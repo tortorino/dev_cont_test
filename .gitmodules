@@ -1,0 +1,6 @@
+[submodule "proto/c"]
+	path = proto/c
+	url = https://github.com/lpportorino/jettison_proto_c.git
+[submodule "proto/ts"]
+	path = proto/ts
+	url = https://github.com/lpportorino/jettison_proto_typescript.git
