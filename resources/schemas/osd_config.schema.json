@@ -10,6 +10,8 @@
       "type": "object",
       "title": "Crosshair",
       "x-ui-level": "top",
+      "x-ui-order": 10,
+      "x-ui-collapsed": false,
       "required": ["enabled", "center_dot", "cross", "circle"],
       "properties": {
         "enabled": { "type": "boolean", "title": "Enabled" },
@@ -23,6 +25,7 @@
           "type": "object",
           "title": "Center Dot",
           "x-ui-level": "accordion",
+          "x-ui-order": 10,
           "required": ["enabled", "radius", "color", "thickness"],
           "properties": {
             "enabled": { "type": "boolean", "title": "Enabled" },
@@ -33,8 +36,9 @@
         },
         "cross": {
           "type": "object",
-          "title": "Cross",
+          "title": "Cross Arms",
           "x-ui-level": "accordion",
+          "x-ui-order": 20,
           "required": ["enabled", "length", "gap", "thickness", "color"],
           "properties": {
             "enabled": { "type": "boolean", "title": "Enabled" },
@@ -46,8 +50,9 @@
         },
         "circle": {
           "type": "object",
-          "title": "Circle",
+          "title": "Reference Circle",
           "x-ui-level": "accordion",
+          "x-ui-order": 30,
           "required": ["enabled", "radius", "thickness", "color"],
           "properties": {
             "enabled": { "type": "boolean", "title": "Enabled" },
@@ -62,6 +67,8 @@
       "type": "object",
       "title": "Timestamp",
       "x-ui-level": "top",
+      "x-ui-order": 30,
+      "x-ui-collapsed": true,
       "required": ["enabled", "position_x", "position_y", "color", "font_size", "font"],
       "properties": {
         "enabled": { "type": "boolean", "title": "Enabled" },
@@ -81,6 +88,8 @@
       "type": "object",
       "title": "Speed Indicators",
       "x-ui-level": "top",
+      "x-ui-order": 40,
+      "x-ui-collapsed": true,
       "required": ["enabled", "color", "font_size", "max_speed_azimuth", "max_speed_elevation", "font"],
       "properties": {
         "enabled": { "type": "boolean", "title": "Enabled" },
@@ -120,8 +129,10 @@
     },
     "variant_info": {
       "type": "object",
-      "title": "Variant Info",
+      "title": "Debug Overlay",
       "x-ui-level": "top",
+      "x-ui-order": 60,
+      "x-ui-collapsed": true,
       "required": ["enabled", "position_x", "position_y", "color", "font_size", "font"],
       "properties": {
         "enabled": { "type": "boolean", "title": "Enabled" },
@@ -139,8 +150,10 @@
     },
     "navball": {
       "type": "object",
-      "title": "Navball",
+      "title": "Navigation Ball",
       "x-ui-level": "top",
+      "x-ui-order": 20,
+      "x-ui-collapsed": false,
       "required": ["enabled", "position_x", "position_y", "size", "skin", "show_level_marker", "center_indicator"],
       "properties": {
         "enabled": { "type": "boolean", "title": "Enabled" },
@@ -186,8 +199,10 @@
     },
     "celestial_indicators": {
       "type": "object",
-      "title": "Celestial Indicators",
+      "title": "Sun & Moon",
       "x-ui-level": "top",
+      "x-ui-order": 50,
+      "x-ui-collapsed": true,
       "required": ["enabled", "show_sun", "show_moon", "scale", "visibility_threshold", "sun_front_svg", "sun_back_svg", "moon_front_svg", "moon_back_svg"],
       "properties": {
         "enabled": { "type": "boolean", "title": "Enabled" },
@@ -210,22 +225,26 @@
         "sun_front_svg": {
           "type": "string",
           "title": "Sun Front SVG",
-          "description": "Path to sun front hemisphere SVG"
+          "description": "Path to sun front hemisphere SVG",
+          "x-ui-hidden": true
         },
         "sun_back_svg": {
           "type": "string",
           "title": "Sun Back SVG",
-          "description": "Path to sun back hemisphere SVG"
+          "description": "Path to sun back hemisphere SVG",
+          "x-ui-hidden": true
         },
         "moon_front_svg": {
           "type": "string",
           "title": "Moon Front SVG",
-          "description": "Path to moon front hemisphere SVG"
+          "description": "Path to moon front hemisphere SVG",
+          "x-ui-hidden": true
         },
         "moon_back_svg": {
           "type": "string",
           "title": "Moon Back SVG",
-          "description": "Path to moon back hemisphere SVG"
+          "description": "Path to moon back hemisphere SVG",
+          "x-ui-hidden": true
         }
       }
     }
