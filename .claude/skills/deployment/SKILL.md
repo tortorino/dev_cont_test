@@ -10,19 +10,19 @@ Assists with deploying OSD packages to the sych.local server.
 
 ## Deployment Targets
 
+Use `make` from anywhere (host or container):
+
 ### Full Deploy (Frontend + Gallery)
 
 ```bash
 # Dev builds (recommended for development)
-./tools/devcontainer-build.sh deploy
+make deploy
 
 # Production builds (optimized)
-./tools/devcontainer-build.sh deploy-prod
+make deploy-prod
 ```
 
 ### Selective Deploy
-
-Inside container or via `make`:
 
 ```bash
 make deploy-frontend   # Live variants only (live_day + live_thermal)

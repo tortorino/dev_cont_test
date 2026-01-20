@@ -15,35 +15,45 @@ Assists with building, compiling, and packaging the Jettison WASM OSD plugin.
 - **4 WASM variants**: live_day, live_thermal, recording_day, recording_thermal
 - **2 build modes**: production (~640KB) and dev (~2.9MB with debug symbols)
 - **Docker-first**: All builds run inside dev container
+- **Unified interface**: `make` commands work from both host and container
 
-### Host Commands (Primary)
+### Build Commands
 
-Always use the devcontainer wrapper from the host:
+Use `make` from anywhere (host or container):
 
 ```bash
 # Build all 4 production WASM
-./tools/devcontainer-build.sh wasm
+make all
 
 # Build all 4 dev WASM (debug symbols)
-./tools/devcontainer-build.sh wasm-debug
+make all-dev
 
 # Build + sign packages
-./tools/devcontainer-build.sh package      # production
-./tools/devcontainer-build.sh package-dev  # dev
+make package-all      # production
+make package-all-dev  # dev
 
 # Full CI pipeline
-./tools/devcontainer-build.sh ci
+make ci
 ```
 
-### Inside Container (CLion/IDE)
+On the host, these automatically delegate to `./tools/devcontainer-build.sh`.
 
-If already in container shell:
+### Additional Host Commands
+
+The wrapper script provides some extra commands:
 
 ```bash
-make                     # Build recording_day
-make all                 # Build all 4 variants
-make all BUILD_MODE=dev  # Build with debug symbols
-make package-all         # Build + sign all
+./tools/devcontainer-build.sh shell    # Interactive container shell
+./tools/devcontainer-build.sh exec "cmd"  # Run arbitrary command
+```
+
+### IDE Support (CLion)
+
+Inside the container, additional targets are available:
+
+```bash
+make                     # Build recording_day only
+make recording_day       # Build single variant
 make index               # Regenerate compile_commands.json
 ```
 

@@ -1,5 +1,5 @@
 # Jettison WASM OSD - Makefile
-# Build system for CLion/terminal development (inside dev container)
+# Build system for CLion/terminal development
 #
 # Main workflow:
 #   make                    - Build recording_day (quality + compile)
@@ -10,6 +10,10 @@
 #
 # Quality (format + lint) runs ONCE before multi-variant builds.
 # Parallel builds use JOBS=8 by default (override with: make all JOBS=N)
+#
+# Environment Detection:
+#   - Host: Delegates to ./tools/devcontainer-build.sh (Docker-based)
+#   - Devcontainer: Runs commands directly (CLion/IDE workflow)
 
 .PHONY: all default build clean clean-wasm clean-packages clean-artifacts help \
         index \
@@ -22,6 +26,21 @@
         deploy deploy-prod deploy-frontend deploy-frontend-prod deploy-gallery deploy-gallery-prod \
         harness video-harness png-harness png png-all video video-all \
         proto ci all-modes png-all-modes
+
+#==============================================================================
+# Environment Detection
+#==============================================================================
+
+# Detect if running inside devcontainer:
+# 1. /workspaces directory exists (standard devcontainer mount point)
+# 2. REMOTE_CONTAINERS env var is set (VS Code Remote Containers)
+DEVCONTAINER := $(shell if [ -d "/workspaces" ] || [ -n "$$REMOTE_CONTAINERS" ]; then echo "1"; fi)
+
+ifeq ($(DEVCONTAINER),1)
+  BUILD_ENV := devcontainer
+else
+  BUILD_ENV := host
+endif
 
 # Parallel jobs for multi-variant builds (override with: make all JOBS=N)
 JOBS ?= 8
@@ -49,8 +68,10 @@ WASI_SDK_PATH ?= /opt/wasi-sdk
 # Native compiler for test harnesses
 NATIVE_CC := gcc
 
-# Create logs directory
+# Create logs directory (only in devcontainer)
+ifeq ($(DEVCONTAINER),1)
 $(shell mkdir -p $(LOGS_DIR))
+endif
 
 #==============================================================================
 # Default Target
@@ -121,7 +142,8 @@ _live_day:
 _live_thermal:
 	@VARIANT=live_thermal BUILD_MODE=$(BUILD_MODE) ./tools/build.sh 2>&1 | tee $(LOGS_DIR)/build_live_thermal.log
 
-# Build all 4 variants in parallel (quality runs once, then 4 parallel compiles)
+ifeq ($(DEVCONTAINER),1)
+# --- Devcontainer: Build all 4 variants in parallel ---
 # Clean WASM files first to ensure no stale binaries can be packaged
 all: quality
 	@echo "=== Building all 4 variants ($(JOBS) parallel jobs) ==="
@@ -130,6 +152,11 @@ all: quality
 	@echo ""
 	@echo "=== All 4 variants built ==="
 	@ls -lh $(BUILD_DIR)/*.wasm 2>/dev/null || true
+else
+# --- Host: Delegate to devcontainer script ---
+all:
+	@./tools/devcontainer-build.sh wasm
+endif
 
 # Dev build targets (debug builds with symbols, ~2.9MB each)
 recording_day_dev: quality _recording_day_dev
@@ -149,7 +176,8 @@ _live_day_dev:
 _live_thermal_dev:
 	@VARIANT=live_thermal BUILD_MODE=dev ./tools/build.sh 2>&1 | tee $(LOGS_DIR)/build_live_thermal_dev.log
 
-# Build all 4 dev variants in parallel
+ifeq ($(DEVCONTAINER),1)
+# --- Devcontainer: Build all 4 dev variants in parallel ---
 # Clean WASM files first to ensure no stale binaries can be packaged
 all-dev: quality
 	@echo "=== Building all 4 variants (dev, $(JOBS) parallel jobs) ==="
@@ -158,6 +186,11 @@ all-dev: quality
 	@echo ""
 	@echo "=== All 4 variants built (dev) ==="
 	@ls -lh $(BUILD_DIR)/*_dev.wasm 2>/dev/null || true
+else
+# --- Host: Delegate to devcontainer script ---
+all-dev:
+	@./tools/devcontainer-build.sh wasm-debug
+endif
 
 #==============================================================================
 # Package Targets
@@ -170,6 +203,7 @@ package: recording_day
 	@echo ""
 	@ls -lh $(DIST_DIR)/*.tar 2>/dev/null || true
 
+ifeq ($(DEVCONTAINER),1)
 package-all: all
 	@echo "=== Packaging all 4 variants ==="
 	@rm -f $(DIST_DIR)/jettison-osd-*.tar
@@ -180,6 +214,10 @@ package-all: all
 	@./tools/package.sh recording_thermal 2>&1 | tee $(LOGS_DIR)/package_recording_thermal.log
 	@echo ""
 	@ls -lh $(DIST_DIR)/*.tar 2>/dev/null || true
+else
+package-all:
+	@./tools/devcontainer-build.sh package
+endif
 
 # Dev package targets (debug builds with symbols)
 package-dev: recording_day_dev
@@ -189,6 +227,7 @@ package-dev: recording_day_dev
 	@echo ""
 	@ls -lh $(DIST_DIR)/*-dev.tar 2>/dev/null || true
 
+ifeq ($(DEVCONTAINER),1)
 package-all-dev: all-dev
 	@echo "=== Packaging all 4 variants (dev) ==="
 	@rm -f $(DIST_DIR)/*-dev.tar
@@ -199,6 +238,10 @@ package-all-dev: all-dev
 	@./tools/package.sh recording_thermal dev 2>&1 | tee $(LOGS_DIR)/package_recording_thermal_dev.log
 	@echo ""
 	@ls -lh $(DIST_DIR)/*-dev.tar 2>/dev/null || true
+else
+package-all-dev:
+	@./tools/devcontainer-build.sh package-dev
+endif
 
 #==============================================================================
 # Deploy Targets
@@ -208,7 +251,8 @@ package-all-dev: all-dev
 -include .env
 export
 
-# Deploy dev builds (live variants to frontend, recording_day to gallery)
+ifeq ($(DEVCONTAINER),1)
+# --- Devcontainer: Deploy dev builds ---
 # Always clean-builds to ensure no stale artifacts
 deploy: clean-artifacts package-all-dev
 	@echo "=== Deploying dev packages ==="
@@ -221,6 +265,14 @@ deploy-prod: clean-artifacts package-all
 	@echo "=== Deploying production packages ==="
 	@./tools/deploy.sh production 2>&1 | tee $(LOGS_DIR)/deploy_prod.log
 	@echo "=== Deploy complete ==="
+else
+# --- Host: Delegate to devcontainer script ---
+deploy:
+	@./tools/devcontainer-build.sh deploy
+
+deploy-prod:
+	@./tools/devcontainer-build.sh deploy-prod
+endif
 
 # Deploy only to frontend (live variants)
 deploy-frontend: package-all-dev
@@ -266,6 +318,7 @@ png: recording_day png-harness
 	@cp $(SNAPSHOT_DIR)/osd_render.png $(DIST_DIR)/recording_day.png 2>/dev/null || true
 	@echo "Output: $(DIST_DIR)/recording_day.png"
 
+ifeq ($(DEVCONTAINER),1)
 png-all: all png-harness
 	@echo "=== Generating all PNG snapshots ==="
 	@mkdir -p $(SNAPSHOT_DIR) $(DIST_DIR)
@@ -276,17 +329,26 @@ png-all: all png-harness
 	done
 	@echo ""
 	@ls -lh $(DIST_DIR)/*.png 2>/dev/null || true
+else
+png-all:
+	@./tools/devcontainer-build.sh test-png
+endif
 
 video-harness:
 	@echo "=== Building video harness ==="
 	@$(MAKE) -C test/video_harness clean all BUILD_MODE=production
 
+ifeq ($(DEVCONTAINER),1)
 video: all video-harness
 	@echo "=== Generating videos for all 4 variants ==="
 	@mkdir -p test/output
 	@$(MAKE) -C test/video_harness run BUILD_MODE=production
 	@echo ""
 	@ls -lh test/output/*.mp4 2>/dev/null || echo "No video files generated"
+else
+video:
+	@./tools/devcontainer-build.sh test-video
+endif
 
 video-all: all-modes video-harness
 	@echo "=== Generating videos for all variants (production only) ==="
@@ -302,17 +364,23 @@ video-all: all-modes video-harness
 # Proto Targets
 #==============================================================================
 
+ifeq ($(DEVCONTAINER),1)
 proto:
 	@echo "=== Updating proto submodules ==="
 	git submodule update --remote --merge proto/c proto/ts
 	@echo "=== Syncing proto/c to src/proto ==="
 	@cp proto/c/*.pb.h proto/c/*.pb.c src/proto/
 	@echo "✅ Proto files updated from submodules"
+else
+proto:
+	@./tools/devcontainer-build.sh proto
+endif
 
 #==============================================================================
 # CI Targets (Full Pipeline)
 #==============================================================================
 
+ifeq ($(DEVCONTAINER),1)
 # Build all 8 variants (4 production + 4 dev) in parallel
 # Clean WASM files first to ensure no stale binaries can be packaged
 all-modes: quality
@@ -325,6 +393,10 @@ all-modes: quality
 	@echo ""
 	@echo "=== All 8 WASM variants built ==="
 	@ls -lh $(BUILD_DIR)/*.wasm 2>/dev/null || true
+else
+all-modes:
+	@./tools/devcontainer-build.sh wasm-all
+endif
 
 png-all-modes: all-modes png-harness
 	@echo "=== Generating PNG snapshots for all variants (both modes) ==="
@@ -341,6 +413,7 @@ png-all-modes: all-modes png-harness
 	@echo ""
 	@ls -lh $(DIST_DIR)/*.png 2>/dev/null || true
 
+ifeq ($(DEVCONTAINER),1)
 ci: proto all-modes png-all-modes video-all
 	@echo ""
 	@echo "=============================================="
@@ -358,6 +431,10 @@ ci: proto all-modes png-all-modes video-all
 	@echo ""
 	@echo "Video files:"
 	@ls -lh test/output/*.mp4 2>/dev/null || true
+else
+ci:
+	@./tools/devcontainer-build.sh ci
+endif
 
 #==============================================================================
 # Clean
@@ -395,6 +472,13 @@ clean:
 
 help:
 	@echo "Jettison WASM OSD - Build System"
+	@echo ""
+	@echo "Build Environment: $(BUILD_ENV)"
+ifeq ($(DEVCONTAINER),1)
+	@echo "  Running inside devcontainer - direct compilation"
+else
+	@echo "  Running on host - delegates to ./tools/devcontainer-build.sh"
+endif
 	@echo ""
 	@echo "Usage: make [target] [VARIANT=name] [BUILD_MODE=mode]"
 	@echo ""

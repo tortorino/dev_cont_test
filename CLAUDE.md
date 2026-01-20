@@ -41,7 +41,7 @@ Quick actions available via `/command`:
 
 ## Build System
 
-**IMPORTANT**: All builds require Docker and the devcontainer CLI. Run builds from the HOST using `./tools/devcontainer-build.sh` - this script handles the Docker container automatically.
+**Unified Interface**: Use `make` from anywhere (host or devcontainer). On the host, `make` automatically delegates to Docker via `./tools/devcontainer-build.sh`.
 
 ### Prerequisites
 
@@ -51,63 +51,68 @@ Quick actions available via `/command`:
 # 2. @devcontainers/cli (auto-installed if missing, or: npm install -g @devcontainers/cli)
 ```
 
-### Quick Start (Host Commands)
+### Quick Start
 
 ```bash
-# Build all 4 production packages (~960KB each)
-./tools/devcontainer-build.sh package
+# Build all 4 production WASM variants
+make all
 
-# Build all 4 dev packages with debug symbols (~1.7MB each)
-./tools/devcontainer-build.sh package-dev
+# Build all 4 dev WASM variants (debug symbols)
+make all-dev
+
+# Build + sign all 4 production packages (~960KB each)
+make package-all
+
+# Build + sign all 4 dev packages (~1.7MB each)
+make package-all-dev
+
+# Build and deploy to sych.local
+make deploy           # dev builds
+make deploy-prod      # production builds
 
 # Generate PNG snapshots for all 4 variants
-./tools/devcontainer-build.sh test-png
-
-# Generate test videos for all 4 variants
-./tools/devcontainer-build.sh test-video
+make png-all
 
 # Full CI pipeline (8 WASM + PNGs + videos)
-./tools/devcontainer-build.sh ci
+make ci
 ```
 
-### All Available Build Commands (Host)
+### All Available Make Targets
 
-| Command | Description | Output Location |
-|---------|-------------|-----------------|
-| `./tools/devcontainer-build.sh build` | Build container image | - |
-| `./tools/devcontainer-build.sh wasm` | Build 4 WASM (production) | `build/*.wasm` |
-| `./tools/devcontainer-build.sh wasm-debug` | Build 4 WASM (debug) | `build/*_dev.wasm` |
-| `./tools/devcontainer-build.sh wasm-all` | Build 8 WASM (both modes) | `build/*.wasm` |
-| `./tools/devcontainer-build.sh package` | 4 signed packages (production) | `dist/*.tar` |
-| `./tools/devcontainer-build.sh package-dev` | 4 signed packages (debug) | `dist/*-dev.tar` |
-| `./tools/devcontainer-build.sh test-png` | Generate PNG snapshots | `dist/*.png` |
-| `./tools/devcontainer-build.sh test-video` | Generate test videos | `test/output/*.mp4` |
-| `./tools/devcontainer-build.sh proto` | Update proto submodules | `proto/c/`, `proto/ts/` |
-| `./tools/devcontainer-build.sh ci` | Full CI pipeline | all outputs |
-| `./tools/devcontainer-build.sh all` | Build container + WASM + PNGs | `build/`, `dist/*.png` |
-| `./tools/devcontainer-build.sh full` | Build container + WASM + PNGs + videos | all outputs |
-| `./tools/devcontainer-build.sh shell` | Interactive container shell | - |
-| `./tools/devcontainer-build.sh exec "cmd"` | Run arbitrary command | - |
+| Target | Description | Output Location |
+|--------|-------------|-----------------|
+| `make all` | Build 4 WASM (production) | `build/*.wasm` |
+| `make all-dev` | Build 4 WASM (debug) | `build/*_dev.wasm` |
+| `make all-modes` | Build 8 WASM (both modes) | `build/*.wasm` |
+| `make package-all` | 4 signed packages (production) | `dist/*.tar` |
+| `make package-all-dev` | 4 signed packages (debug) | `dist/*-dev.tar` |
+| `make deploy` | Build + deploy (dev) | sych.local |
+| `make deploy-prod` | Build + deploy (production) | sych.local |
+| `make png-all` | Generate PNG snapshots | `dist/*.png` |
+| `make video` | Generate test videos | `test/output/*.mp4` |
+| `make proto` | Update proto submodules | `proto/c/`, `proto/ts/` |
+| `make ci` | Full CI pipeline | all outputs |
+| `make help` | Show all available targets | - |
 
-### Make Targets (inside container only)
+### Additional Host Commands
 
-These are for CLion/IDE integration. Use `./tools/devcontainer-build.sh shell` first:
+The devcontainer wrapper provides extra utilities:
 
 ```bash
-make                    # Build recording_day (default)
-make all                # Build all 4 variants
-make all BUILD_MODE=dev # Build with debug symbols
-make package            # Build + sign recording_day
-make package-all        # Build + sign all 4 variants
-make package-dev        # Build + sign recording_day (dev)
-make package-all-dev    # Build + sign all 4 variants (dev)
-make png-all            # Generate PNGs (4 variants)
-make video              # Generate videos (4 variants)
-make ci                 # Full CI pipeline
-make index              # Generate compile_commands.json for CLion/clangd
+./tools/devcontainer-build.sh shell      # Interactive container shell
+./tools/devcontainer-build.sh exec "cmd" # Run arbitrary command in container
+./tools/devcontainer-build.sh build      # Rebuild container image
 ```
 
 ### IDE Support (CLion)
+
+Inside the container, additional targets for single-variant builds:
+
+```bash
+make                    # Build recording_day (default)
+make recording_day      # Build single variant
+make index              # Generate compile_commands.json for CLion/clangd
+```
 
 The project includes a pre-generated `compile_commands.json` for CLion code intelligence. This file is committed to the repo since dev container paths are stable (`/workspaces/dev_cont_test/...`).
 
