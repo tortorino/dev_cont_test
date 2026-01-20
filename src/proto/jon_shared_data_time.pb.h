@@ -10,53 +10,45 @@
 #endif
 
 /* Struct definitions */
-typedef struct _ser_JonGuiDataTime
-{
-  int64_t timestamp;
-  int64_t manual_timestamp;
-  int32_t zone_id;
-  bool use_manual_time;
+typedef struct _ser_JonGuiDataTime {
+    int64_t timestamp;
+    int64_t manual_timestamp;
+    int32_t zone_id;
+    bool use_manual_time;
 } ser_JonGuiDataTime;
 
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define ser_JonGuiDataTime_init_default \
-  {                                     \
-    0, 0, 0, 0                          \
-  }
-#define ser_JonGuiDataTime_init_zero \
-  {                                  \
-    0, 0, 0, 0                       \
-  }
+#define ser_JonGuiDataTime_init_default          {0, 0, 0, 0}
+#define ser_JonGuiDataTime_init_zero             {0, 0, 0, 0}
 
 /* Field tags (for use in manual encoding/decoding) */
-#define ser_JonGuiDataTime_timestamp_tag 1
-#define ser_JonGuiDataTime_manual_timestamp_tag 2
-#define ser_JonGuiDataTime_zone_id_tag 3
-#define ser_JonGuiDataTime_use_manual_time_tag 4
+#define ser_JonGuiDataTime_timestamp_tag         1
+#define ser_JonGuiDataTime_manual_timestamp_tag  2
+#define ser_JonGuiDataTime_zone_id_tag           3
+#define ser_JonGuiDataTime_use_manual_time_tag   4
 
 /* Struct field encoding specification for nanopb */
-#define ser_JonGuiDataTime_FIELDLIST(X, a)           \
-  X(a, STATIC, SINGULAR, INT64, timestamp, 1)        \
-  X(a, STATIC, SINGULAR, INT64, manual_timestamp, 2) \
-  X(a, STATIC, SINGULAR, INT32, zone_id, 3)          \
-  X(a, STATIC, SINGULAR, BOOL, use_manual_time, 4)
+#define ser_JonGuiDataTime_FIELDLIST(X, a) \
+X(a, STATIC,   SINGULAR, INT64,    timestamp,         1) \
+X(a, STATIC,   SINGULAR, INT64,    manual_timestamp,   2) \
+X(a, STATIC,   SINGULAR, INT32,    zone_id,           3) \
+X(a, STATIC,   SINGULAR, BOOL,     use_manual_time,   4)
 #define ser_JonGuiDataTime_CALLBACK NULL
 #define ser_JonGuiDataTime_DEFAULT NULL
 
-  extern const pb_msgdesc_t ser_JonGuiDataTime_msg;
+extern const pb_msgdesc_t ser_JonGuiDataTime_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define ser_JonGuiDataTime_fields &ser_JonGuiDataTime_msg
 
 /* Maximum encoded size of messages (where known) */
-#define SER_JON_SHARED_DATA_TIME_PB_H_MAX_SIZE ser_JonGuiDataTime_size
-#define ser_JonGuiDataTime_size 35
+#define SER_JON_SHARED_DATA_TIME_PB_H_MAX_SIZE   ser_JonGuiDataTime_size
+#define ser_JonGuiDataTime_size                  35
 
 #ifdef __cplusplus
 } /* extern "C" */

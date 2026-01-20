@@ -16,3 +16,6 @@ PB_BIND(cmd_Power_SetAll, cmd_Power_SetAll, AUTO)
 
 
 PB_BIND(cmd_Power_SetAlertThreshold, cmd_Power_SetAlertThreshold, AUTO)
+
+
+

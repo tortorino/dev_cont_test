@@ -22,3 +22,6 @@ PB_BIND(cmd_DayCamGlassHeater_TurnOff, cmd_DayCamGlassHeater_TurnOff, AUTO)
 
 
 PB_BIND(cmd_DayCamGlassHeater_GetMeteo, cmd_DayCamGlassHeater_GetMeteo, AUTO)
+
+
+

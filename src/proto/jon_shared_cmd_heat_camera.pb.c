@@ -39,9 +39,7 @@ PB_BIND(cmd_HeatCamera_SetValue, cmd_HeatCamera_SetValue, AUTO)
 PB_BIND(cmd_HeatCamera_SetDDELevel, cmd_HeatCamera_SetDDELevel, AUTO)
 
 
-PB_BIND(cmd_HeatCamera_SetDigitalZoomLevel,
-        cmd_HeatCamera_SetDigitalZoomLevel,
-        AUTO)
+PB_BIND(cmd_HeatCamera_SetDigitalZoomLevel, cmd_HeatCamera_SetDigitalZoomLevel, AUTO)
 
 
 PB_BIND(cmd_HeatCamera_ShiftDDE, cmd_HeatCamera_ShiftDDE, AUTO)
@@ -86,9 +84,7 @@ PB_BIND(cmd_HeatCamera_PrevZoomTablePos, cmd_HeatCamera_PrevZoomTablePos, AUTO)
 PB_BIND(cmd_HeatCamera_SetCalibMode, cmd_HeatCamera_SetCalibMode, AUTO)
 
 
-PB_BIND(cmd_HeatCamera_SetZoomTableValue,
-        cmd_HeatCamera_SetZoomTableValue,
-        AUTO)
+PB_BIND(cmd_HeatCamera_SetZoomTableValue, cmd_HeatCamera_SetZoomTableValue, AUTO)
 
 
 PB_BIND(cmd_HeatCamera_SetAGC, cmd_HeatCamera_SetAGC, AUTO)
@@ -133,6 +129,7 @@ PB_BIND(cmd_HeatCamera_ZoomROI, cmd_HeatCamera_ZoomROI, AUTO)
 PB_BIND(cmd_HeatCamera_FxROI, cmd_HeatCamera_FxROI, AUTO)
 
 
+
 #ifndef PB_CONVERT_DOUBLE_FLOAT
 /* On some platforms (such as AVR), double is really float.
  * To be able to encode/decode double on these platforms, you need.
@@ -140,3 +137,4 @@ PB_BIND(cmd_HeatCamera_FxROI, cmd_HeatCamera_FxROI, AUTO)
  */
 PB_STATIC_ASSERT(sizeof(double) == 8, DOUBLE_MUST_BE_8_BYTES)
 #endif
+

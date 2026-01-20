@@ -42,6 +42,16 @@ PB_BIND(cmd_CV_StartTrackNDC, cmd_CV_StartTrackNDC, AUTO)
 PB_BIND(cmd_CV_StopTrack, cmd_CV_StopTrack, AUTO)
 
 
+PB_BIND(cmd_CV_BridgeStart, cmd_CV_BridgeStart, AUTO)
+
+
+PB_BIND(cmd_CV_BridgeStop, cmd_CV_BridgeStop, AUTO)
+
+
+PB_BIND(cmd_CV_BridgeRestart, cmd_CV_BridgeRestart, AUTO)
+
+
+
 #ifndef PB_CONVERT_DOUBLE_FLOAT
 /* On some platforms (such as AVR), double is really float.
  * To be able to encode/decode double on these platforms, you need.
@@ -49,3 +59,4 @@ PB_BIND(cmd_CV_StopTrack, cmd_CV_StopTrack, AUTO)
  */
 PB_STATIC_ASSERT(sizeof(double) == 8, DOUBLE_MUST_BE_8_BYTES)
 #endif
+

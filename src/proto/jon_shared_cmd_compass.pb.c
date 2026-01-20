@@ -33,24 +33,17 @@ PB_BIND(cmd_Compass_CalibrateCencel, cmd_Compass_CalibrateCencel, AUTO)
 PB_BIND(cmd_Compass_GetMeteo, cmd_Compass_GetMeteo, AUTO)
 
 
-PB_BIND(cmd_Compass_SetMagneticDeclination,
-        cmd_Compass_SetMagneticDeclination,
-        AUTO)
+PB_BIND(cmd_Compass_SetMagneticDeclination, cmd_Compass_SetMagneticDeclination, AUTO)
 
 
-PB_BIND(cmd_Compass_SetOffsetAngleAzimuth,
-        cmd_Compass_SetOffsetAngleAzimuth,
-        AUTO)
+PB_BIND(cmd_Compass_SetOffsetAngleAzimuth, cmd_Compass_SetOffsetAngleAzimuth, AUTO)
 
 
-PB_BIND(cmd_Compass_SetOffsetAngleElevation,
-        cmd_Compass_SetOffsetAngleElevation,
-        AUTO)
+PB_BIND(cmd_Compass_SetOffsetAngleElevation, cmd_Compass_SetOffsetAngleElevation, AUTO)
 
 
-PB_BIND(cmd_Compass_SetUseRotaryPosition,
-        cmd_Compass_SetUseRotaryPosition,
-        AUTO)
+PB_BIND(cmd_Compass_SetUseRotaryPosition, cmd_Compass_SetUseRotaryPosition, AUTO)
+
 
 
 #ifndef PB_CONVERT_DOUBLE_FLOAT
@@ -60,3 +53,4 @@ PB_BIND(cmd_Compass_SetUseRotaryPosition,
  */
 PB_STATIC_ASSERT(sizeof(double) == 8, DOUBLE_MUST_BE_8_BYTES)
 #endif
+
