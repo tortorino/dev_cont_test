@@ -6,8 +6,9 @@
 #error Regenerate this file with the current version of nanopb generator.
 #endif
 
-PB_BIND(ser_JonGuiDataCompassCalibration, ser_JonGuiDataCompassCalibration, AUTO)
-
+PB_BIND(ser_JonGuiDataCompassCalibration,
+        ser_JonGuiDataCompassCalibration,
+        AUTO)
 
 
 #ifndef PB_CONVERT_DOUBLE_FLOAT
@@ -17,4 +18,3 @@ PB_BIND(ser_JonGuiDataCompassCalibration, ser_JonGuiDataCompassCalibration, AUTO
  */
 PB_STATIC_ASSERT(sizeof(double) == 8, DOUBLE_MUST_BE_8_BYTES)
 #endif
-

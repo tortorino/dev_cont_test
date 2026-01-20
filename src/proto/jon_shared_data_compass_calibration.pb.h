@@ -3,31 +3,40 @@
 
 #ifndef PB_SER_JON_SHARED_DATA_COMPASS_CALIBRATION_PB_H_INCLUDED
 #define PB_SER_JON_SHARED_DATA_COMPASS_CALIBRATION_PB_H_INCLUDED
-#include <pb.h>
 #include "jon_shared_data_types.pb.h"
+
+#include <pb.h>
 
 #if PB_PROTO_HEADER_VERSION != 40
 #error Regenerate this file with the current version of nanopb generator.
 #endif
 
 /* Struct definitions */
-typedef struct _ser_JonGuiDataCompassCalibration {
-    uint32_t stage;
-    uint32_t final_stage;
-    double target_azimuth;
-    double target_elevation;
-    double target_bank;
-    ser_JonGuiDataCompassCalibrateStatus status;
+typedef struct _ser_JonGuiDataCompassCalibration
+{
+  uint32_t stage;
+  uint32_t final_stage;
+  double target_azimuth;
+  double target_elevation;
+  double target_bank;
+  ser_JonGuiDataCompassCalibrateStatus status;
 } ser_JonGuiDataCompassCalibration;
 
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* Initializer values for message structs */
-#define ser_JonGuiDataCompassCalibration_init_default {0, 0, 0, 0, 0, _ser_JonGuiDataCompassCalibrateStatus_MIN}
-#define ser_JonGuiDataCompassCalibration_init_zero {0, 0, 0, 0, 0, _ser_JonGuiDataCompassCalibrateStatus_MIN}
+#define ser_JonGuiDataCompassCalibration_init_default        \
+  {                                                          \
+    0, 0, 0, 0, 0, _ser_JonGuiDataCompassCalibrateStatus_MIN \
+  }
+#define ser_JonGuiDataCompassCalibration_init_zero           \
+  {                                                          \
+    0, 0, 0, 0, 0, _ser_JonGuiDataCompassCalibrateStatus_MIN \
+  }
 
 /* Field tags (for use in manual encoding/decoding) */
 #define ser_JonGuiDataCompassCalibration_stage_tag 1
@@ -39,23 +48,25 @@ extern "C" {
 
 /* Struct field encoding specification for nanopb */
 #define ser_JonGuiDataCompassCalibration_FIELDLIST(X, a) \
-X(a, STATIC,   SINGULAR, UINT32,   stage,             1) \
-X(a, STATIC,   SINGULAR, UINT32,   final_stage,       2) \
-X(a, STATIC,   SINGULAR, DOUBLE,   target_azimuth,    3) \
-X(a, STATIC,   SINGULAR, DOUBLE,   target_elevation,   4) \
-X(a, STATIC,   SINGULAR, DOUBLE,   target_bank,       5) \
-X(a, STATIC,   SINGULAR, UENUM,    status,            6)
+  X(a, STATIC, SINGULAR, UINT32, stage, 1)               \
+  X(a, STATIC, SINGULAR, UINT32, final_stage, 2)         \
+  X(a, STATIC, SINGULAR, DOUBLE, target_azimuth, 3)      \
+  X(a, STATIC, SINGULAR, DOUBLE, target_elevation, 4)    \
+  X(a, STATIC, SINGULAR, DOUBLE, target_bank, 5)         \
+  X(a, STATIC, SINGULAR, UENUM, status, 6)
 #define ser_JonGuiDataCompassCalibration_CALLBACK NULL
 #define ser_JonGuiDataCompassCalibration_DEFAULT NULL
 
-extern const pb_msgdesc_t ser_JonGuiDataCompassCalibration_msg;
+  extern const pb_msgdesc_t ser_JonGuiDataCompassCalibration_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
-#define ser_JonGuiDataCompassCalibration_fields &ser_JonGuiDataCompassCalibration_msg
+#define ser_JonGuiDataCompassCalibration_fields \
+  &ser_JonGuiDataCompassCalibration_msg
 
 /* Maximum encoded size of messages (where known) */
-#define SER_JON_SHARED_DATA_COMPASS_CALIBRATION_PB_H_MAX_SIZE ser_JonGuiDataCompassCalibration_size
-#define ser_JonGuiDataCompassCalibration_size    41
+#define SER_JON_SHARED_DATA_COMPASS_CALIBRATION_PB_H_MAX_SIZE \
+  ser_JonGuiDataCompassCalibration_size
+#define ser_JonGuiDataCompassCalibration_size 41
 
 #ifdef __cplusplus
 } /* extern "C" */

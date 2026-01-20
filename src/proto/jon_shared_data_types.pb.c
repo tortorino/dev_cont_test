@@ -15,49 +15,6 @@ PB_BIND(ser_JonOpaquePayloadVersion, ser_JonOpaquePayloadVersion, AUTO)
 PB_BIND(ser_JonOpaquePayload, ser_JonOpaquePayload, AUTO)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #ifndef PB_CONVERT_DOUBLE_FLOAT
 /* On some platforms (such as AVR), double is really float.
  * To be able to encode/decode double on these platforms, you need.
@@ -65,4 +22,3 @@ PB_BIND(ser_JonOpaquePayload, ser_JonOpaquePayload, AUTO)
  */
 PB_STATIC_ASSERT(sizeof(double) == 8, DOUBLE_MUST_BE_8_BYTES)
 #endif
-

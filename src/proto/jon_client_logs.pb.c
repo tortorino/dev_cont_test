@@ -12,7 +12,6 @@ PB_BIND(jon_logs_ClientLogEntry, jon_logs_ClientLogEntry, 2)
 PB_BIND(jon_logs_ClientLogBatch, jon_logs_ClientLogBatch, AUTO)
 
 
-
 #ifndef PB_CONVERT_DOUBLE_FLOAT
 /* On some platforms (such as AVR), double is really float.
  * To be able to encode/decode double on these platforms, you need.
@@ -20,4 +19,3 @@ PB_BIND(jon_logs_ClientLogBatch, jon_logs_ClientLogBatch, AUTO)
  */
 PB_STATIC_ASSERT(sizeof(double) == 8, DOUBLE_MUST_BE_8_BYTES)
 #endif
-

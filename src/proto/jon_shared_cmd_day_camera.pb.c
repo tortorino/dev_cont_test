@@ -42,7 +42,9 @@ PB_BIND(cmd_DayCamera_HaltAll, cmd_DayCamera_HaltAll, AUTO)
 PB_BIND(cmd_DayCamera_SetFxMode, cmd_DayCamera_SetFxMode, AUTO)
 
 
-PB_BIND(cmd_DayCamera_SetDigitalZoomLevel, cmd_DayCamera_SetDigitalZoomLevel, AUTO)
+PB_BIND(cmd_DayCamera_SetDigitalZoomLevel,
+        cmd_DayCamera_SetDigitalZoomLevel,
+        AUTO)
 
 
 PB_BIND(cmd_DayCamera_Focus, cmd_DayCamera_Focus, AUTO)
@@ -111,7 +113,6 @@ PB_BIND(cmd_DayCamera_ZoomROI, cmd_DayCamera_ZoomROI, AUTO)
 PB_BIND(cmd_DayCamera_FxROI, cmd_DayCamera_FxROI, AUTO)
 
 
-
 #ifndef PB_CONVERT_DOUBLE_FLOAT
 /* On some platforms (such as AVR), double is really float.
  * To be able to encode/decode double on these platforms, you need.
@@ -119,4 +120,3 @@ PB_BIND(cmd_DayCamera_FxROI, cmd_DayCamera_FxROI, AUTO)
  */
 PB_STATIC_ASSERT(sizeof(double) == 8, DOUBLE_MUST_BE_8_BYTES)
 #endif
-

@@ -18,7 +18,9 @@ PB_BIND(cmd_OSD_ShowLRFMeasureScreen, cmd_OSD_ShowLRFMeasureScreen, AUTO)
 PB_BIND(cmd_OSD_ShowLRFResultScreen, cmd_OSD_ShowLRFResultScreen, AUTO)
 
 
-PB_BIND(cmd_OSD_ShowLRFResultSimplifiedScreen, cmd_OSD_ShowLRFResultSimplifiedScreen, AUTO)
+PB_BIND(cmd_OSD_ShowLRFResultSimplifiedScreen,
+        cmd_OSD_ShowLRFResultSimplifiedScreen,
+        AUTO)
 
 
 PB_BIND(cmd_OSD_EnableHeatOSD, cmd_OSD_EnableHeatOSD, AUTO)
@@ -31,6 +33,3 @@ PB_BIND(cmd_OSD_EnableDayOSD, cmd_OSD_EnableDayOSD, AUTO)
 
 
 PB_BIND(cmd_OSD_DisableDayOSD, cmd_OSD_DisableDayOSD, AUTO)
-
-
-

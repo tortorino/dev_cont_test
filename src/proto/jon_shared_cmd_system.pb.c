@@ -85,6 +85,3 @@ PB_BIND(cmd_System_StepTimeZone, cmd_System_StepTimeZone, AUTO)
 
 
 PB_BIND(cmd_System_SetTimeAndZone, cmd_System_SetTimeAndZone, AUTO)
-
-
-

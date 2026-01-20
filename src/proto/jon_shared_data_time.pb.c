@@ -7,6 +7,3 @@
 #endif
 
 PB_BIND(ser_JonGuiDataTime, ser_JonGuiDataTime, AUTO)
-
-
-

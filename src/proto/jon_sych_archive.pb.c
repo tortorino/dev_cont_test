@@ -19,6 +19,3 @@ PB_BIND(jon_archive_VideoEntry, jon_archive_VideoEntry, 2)
 
 
 PB_BIND(jon_archive_OSDReference, jon_archive_OSDReference, AUTO)
-
-
-

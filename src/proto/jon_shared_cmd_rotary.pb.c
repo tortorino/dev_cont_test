@@ -15,43 +15,69 @@ PB_BIND(cmd_RotaryPlatform_Axis, cmd_RotaryPlatform_Axis, AUTO)
 PB_BIND(cmd_RotaryPlatform_SetMode, cmd_RotaryPlatform_SetMode, AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_SetAzimuthValue, cmd_RotaryPlatform_SetAzimuthValue, AUTO)
+PB_BIND(cmd_RotaryPlatform_SetAzimuthValue,
+        cmd_RotaryPlatform_SetAzimuthValue,
+        AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_RotateAzimuthTo, cmd_RotaryPlatform_RotateAzimuthTo, AUTO)
+PB_BIND(cmd_RotaryPlatform_RotateAzimuthTo,
+        cmd_RotaryPlatform_RotateAzimuthTo,
+        AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_RotateAzimuth, cmd_RotaryPlatform_RotateAzimuth, AUTO)
+PB_BIND(cmd_RotaryPlatform_RotateAzimuth,
+        cmd_RotaryPlatform_RotateAzimuth,
+        AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_RotateElevation, cmd_RotaryPlatform_RotateElevation, AUTO)
+PB_BIND(cmd_RotaryPlatform_RotateElevation,
+        cmd_RotaryPlatform_RotateElevation,
+        AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_SetElevationValue, cmd_RotaryPlatform_SetElevationValue, AUTO)
+PB_BIND(cmd_RotaryPlatform_SetElevationValue,
+        cmd_RotaryPlatform_SetElevationValue,
+        AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_RotateElevationTo, cmd_RotaryPlatform_RotateElevationTo, AUTO)
+PB_BIND(cmd_RotaryPlatform_RotateElevationTo,
+        cmd_RotaryPlatform_RotateElevationTo,
+        AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_RotateElevationRelative, cmd_RotaryPlatform_RotateElevationRelative, AUTO)
+PB_BIND(cmd_RotaryPlatform_RotateElevationRelative,
+        cmd_RotaryPlatform_RotateElevationRelative,
+        AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_RotateElevationRelativeSet, cmd_RotaryPlatform_RotateElevationRelativeSet, AUTO)
+PB_BIND(cmd_RotaryPlatform_RotateElevationRelativeSet,
+        cmd_RotaryPlatform_RotateElevationRelativeSet,
+        AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_RotateAzimuthRelative, cmd_RotaryPlatform_RotateAzimuthRelative, AUTO)
+PB_BIND(cmd_RotaryPlatform_RotateAzimuthRelative,
+        cmd_RotaryPlatform_RotateAzimuthRelative,
+        AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_RotateAzimuthRelativeSet, cmd_RotaryPlatform_RotateAzimuthRelativeSet, AUTO)
+PB_BIND(cmd_RotaryPlatform_RotateAzimuthRelativeSet,
+        cmd_RotaryPlatform_RotateAzimuthRelativeSet,
+        AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_SetPlatformAzimuth, cmd_RotaryPlatform_SetPlatformAzimuth, AUTO)
+PB_BIND(cmd_RotaryPlatform_SetPlatformAzimuth,
+        cmd_RotaryPlatform_SetPlatformAzimuth,
+        AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_SetPlatformElevation, cmd_RotaryPlatform_SetPlatformElevation, AUTO)
+PB_BIND(cmd_RotaryPlatform_SetPlatformElevation,
+        cmd_RotaryPlatform_SetPlatformElevation,
+        AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_SetPlatformBank, cmd_RotaryPlatform_SetPlatformBank, AUTO)
+PB_BIND(cmd_RotaryPlatform_SetPlatformBank,
+        cmd_RotaryPlatform_SetPlatformBank,
+        AUTO)
 
 
 PB_BIND(cmd_RotaryPlatform_GetMeteo, cmd_RotaryPlatform_GetMeteo, AUTO)
@@ -84,7 +110,9 @@ PB_BIND(cmd_RotaryPlatform_ScanUnpause, cmd_RotaryPlatform_ScanUnpause, AUTO)
 PB_BIND(cmd_RotaryPlatform_HaltAzimuth, cmd_RotaryPlatform_HaltAzimuth, AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_HaltElevation, cmd_RotaryPlatform_HaltElevation, AUTO)
+PB_BIND(cmd_RotaryPlatform_HaltElevation,
+        cmd_RotaryPlatform_HaltElevation,
+        AUTO)
 
 
 PB_BIND(cmd_RotaryPlatform_ScanPrev, cmd_RotaryPlatform_ScanPrev, AUTO)
@@ -93,16 +121,24 @@ PB_BIND(cmd_RotaryPlatform_ScanPrev, cmd_RotaryPlatform_ScanPrev, AUTO)
 PB_BIND(cmd_RotaryPlatform_ScanNext, cmd_RotaryPlatform_ScanNext, AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_ScanRefreshNodeList, cmd_RotaryPlatform_ScanRefreshNodeList, AUTO)
+PB_BIND(cmd_RotaryPlatform_ScanRefreshNodeList,
+        cmd_RotaryPlatform_ScanRefreshNodeList,
+        AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_ScanSelectNode, cmd_RotaryPlatform_ScanSelectNode, AUTO)
+PB_BIND(cmd_RotaryPlatform_ScanSelectNode,
+        cmd_RotaryPlatform_ScanSelectNode,
+        AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_ScanDeleteNode, cmd_RotaryPlatform_ScanDeleteNode, AUTO)
+PB_BIND(cmd_RotaryPlatform_ScanDeleteNode,
+        cmd_RotaryPlatform_ScanDeleteNode,
+        AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_ScanUpdateNode, cmd_RotaryPlatform_ScanUpdateNode, AUTO)
+PB_BIND(cmd_RotaryPlatform_ScanUpdateNode,
+        cmd_RotaryPlatform_ScanUpdateNode,
+        AUTO)
 
 
 PB_BIND(cmd_RotaryPlatform_ScanAddNode, cmd_RotaryPlatform_ScanAddNode, AUTO)
@@ -111,7 +147,9 @@ PB_BIND(cmd_RotaryPlatform_ScanAddNode, cmd_RotaryPlatform_ScanAddNode, AUTO)
 PB_BIND(cmd_RotaryPlatform_Elevation, cmd_RotaryPlatform_Elevation, AUTO)
 
 
-PB_BIND(cmd_RotaryPlatform_setUseRotaryAsCompass, cmd_RotaryPlatform_setUseRotaryAsCompass, AUTO)
+PB_BIND(cmd_RotaryPlatform_setUseRotaryAsCompass,
+        cmd_RotaryPlatform_setUseRotaryAsCompass,
+        AUTO)
 
 
 PB_BIND(cmd_RotaryPlatform_RotateToGPS, cmd_RotaryPlatform_RotateToGPS, AUTO)
@@ -126,7 +164,6 @@ PB_BIND(cmd_RotaryPlatform_RotateToNDC, cmd_RotaryPlatform_RotateToNDC, AUTO)
 PB_BIND(cmd_RotaryPlatform_HaltWithNDC, cmd_RotaryPlatform_HaltWithNDC, AUTO)
 
 
-
 #ifndef PB_CONVERT_DOUBLE_FLOAT
 /* On some platforms (such as AVR), double is really float.
  * To be able to encode/decode double on these platforms, you need.
@@ -134,4 +171,3 @@ PB_BIND(cmd_RotaryPlatform_HaltWithNDC, cmd_RotaryPlatform_HaltWithNDC, AUTO)
  */
 PB_STATIC_ASSERT(sizeof(double) == 8, DOUBLE_MUST_BE_8_BYTES)
 #endif
-

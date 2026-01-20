@@ -15,7 +15,6 @@ PB_BIND(ser_JonGuiDataTarget, ser_JonGuiDataTarget, AUTO)
 PB_BIND(ser_RgbColor, ser_RgbColor, AUTO)
 
 
-
 #ifndef PB_CONVERT_DOUBLE_FLOAT
 /* On some platforms (such as AVR), double is really float.
  * To be able to encode/decode double on these platforms, you need.
@@ -23,4 +22,3 @@ PB_BIND(ser_RgbColor, ser_RgbColor, AUTO)
  */
 PB_STATIC_ASSERT(sizeof(double) == 8, DOUBLE_MUST_BE_8_BYTES)
 #endif
-

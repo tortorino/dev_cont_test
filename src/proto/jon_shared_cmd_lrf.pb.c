@@ -52,6 +52,3 @@ PB_BIND(cmd_Lrf_SetScanMode, cmd_Lrf_SetScanMode, AUTO)
 
 
 PB_BIND(cmd_Lrf_NewSession, cmd_Lrf_NewSession, AUTO)
-
-
-
