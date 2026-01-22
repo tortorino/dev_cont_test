@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Moon indicator for radar compass -->
+  <!-- Crescent moon shape - light gray/silver -->
+  <path d="M 16 4
+           A 12 12 0 1 0 16 28
+           A 8 8 0 1 1 16 4"
+        fill="#C0C0C0"
+        stroke="#808080"
+        stroke-width="1"/>
+</svg>

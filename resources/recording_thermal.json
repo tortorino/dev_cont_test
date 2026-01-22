@@ -48,17 +48,28 @@
     "font_size": 18,
     "font": "liberation_sans_bold"
   },
-  "navball": {
+  "radar_compass": {
     "enabled": true,
     "position_x": 350,
     "position_y": 470,
     "size": 200,
-    "skin": "5thHorseman_v2",
-    "show_level_marker": false,
-    "center_indicator": {
-      "enabled": true,
-      "indicator": "rectangle",
-      "scale": 0.2
+    "rings": {
+      "distances": [1.0, 5.0, 20.0],
+      "color": "#80FFFFFF",
+      "thickness": 1.5,
+      "show_labels": true,
+      "label_font_size": 10,
+      "label_font": "liberation_sans_bold"
+    },
+    "cardinals": {
+      "color": "#FFFFFFFF",
+      "font_size": 14,
+      "font": "liberation_sans_bold"
+    },
+    "fov_wedge": {
+      "fill_color": "#3000FF00",
+      "outline_color": "#FF00FF00",
+      "outline_thickness": 2.0
     }
   },
   "celestial_indicators": {
@@ -67,9 +78,7 @@
     "show_moon": true,
     "scale": 1.0,
     "visibility_threshold": -5.0,
-    "sun_front_svg": "resources/navball_indicators/sun_front.svg",
-    "sun_back_svg": "resources/navball_indicators/sun_back.svg",
-    "moon_front_svg": "resources/navball_indicators/moon_front.svg",
-    "moon_back_svg": "resources/navball_indicators/moon_back.svg"
+    "sun_svg": "resources/radar_indicators/sun.svg",
+    "moon_svg": "resources/radar_indicators/moon.svg"
   }
 }

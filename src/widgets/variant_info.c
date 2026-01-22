@@ -323,16 +323,17 @@ variant_info_render(osd_context_t *ctx, const osd_state_t *state)
   items[7].key = "Speed Indicators";
 
   snprintf(items[8].value, sizeof(items[8].value), "%s",
-           ctx->config.navball.enabled ? "Enabled" : "Disabled");
-  items[8].key = "Navball";
+           ctx->config.radar_compass.enabled ? "Enabled" : "Disabled");
+  items[8].key = "Radar Compass";
 
   snprintf(items[9].value, sizeof(items[9].value), "%d, %d",
-           ctx->config.navball.position_x, ctx->config.navball.position_y);
-  items[9].key = "Navball Pos";
+           ctx->config.radar_compass.position_x,
+           ctx->config.radar_compass.position_y);
+  items[9].key = "Radar Pos";
 
   snprintf(items[10].value, sizeof(items[10].value), "%dpx",
-           ctx->config.navball.size);
-  items[10].key = "Navball Size";
+           ctx->config.radar_compass.size);
+  items[10].key = "Radar Size";
 
   // Speed debug info (always shown)
   // Speeds from proto are normalized (-1.0 to 1.0)

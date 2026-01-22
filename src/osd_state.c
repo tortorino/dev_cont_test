@@ -5,6 +5,8 @@
 
 #include "proto/jon_shared_data.pb.h"
 
+#include <stdio.h>
+
 // ════════════════════════════════════════════════════════════
 // ORIENTATION DATA
 // ════════════════════════════════════════════════════════════
@@ -158,4 +160,26 @@ osd_state_get_frame_monotonic_heat_us(const osd_state_t *state)
     return 0;
 
   return state->frame_monotonic_heat_us;
+}
+
+// ════════════════════════════════════════════════════════════
+// CAMERA FOV DATA
+// ════════════════════════════════════════════════════════════
+
+double
+osd_state_get_camera_fov_day(const osd_state_t *state)
+{
+  if (!state || !state->has_camera_day)
+    return 0.0;
+  printf("FOV: %0.2f", state->camera_day.horizontal_fov_degrees);
+  return state->camera_day.horizontal_fov_degrees;
+}
+
+double
+osd_state_get_camera_fov_heat(const osd_state_t *state)
+{
+  if (!state || !state->has_camera_heat)
+    return 0.0;
+
+  return state->camera_heat.horizontal_fov_degrees;
 }

@@ -95,4 +95,13 @@ uint64_t osd_state_get_monotonic_time_us(const osd_state_t *state);
 uint64_t osd_state_get_frame_monotonic_day_us(const osd_state_t *state);
 uint64_t osd_state_get_frame_monotonic_heat_us(const osd_state_t *state);
 
+// ════════════════════════════════════════════════════════════
+// CAMERA FOV DATA (for radar compass widget)
+// ════════════════════════════════════════════════════════════
+
+// Get camera field of view
+// Returns horizontal FOV in degrees, or 0 if invalid
+double osd_state_get_camera_fov_day(const osd_state_t *state);
+double osd_state_get_camera_fov_heat(const osd_state_t *state);
+
 #endif // OSD_STATE_H

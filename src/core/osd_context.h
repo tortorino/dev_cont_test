@@ -63,31 +63,39 @@ typedef struct
   size_t proto_size;
   bool proto_valid;
 
-  // Nav ball state
-  bool navball_enabled;
-  int navball_x;
-  int navball_y;
-  int navball_size;
-  navball_skin_t navball_skin;
-  bool navball_show_level_marker;
-  void *navball_texture; // Pointer to texture_t (opaque)
-  void *navball_lut;     // Pointer to navball_lut_t (opaque)
+  // Radar compass state
+  bool radar_compass_enabled;
+  int radar_compass_x;
+  int radar_compass_y;
+  int radar_compass_size;
 
-  // Nav ball center indicator
-  bool navball_show_center_indicator;
-  float navball_center_indicator_scale;
-  svg_resource_t navball_center_indicator_svg;
+  // Distance rings
+  int radar_compass_num_rings;
+  float radar_compass_ring_distances[RADAR_COMPASS_MAX_RINGS];
+  uint32_t radar_compass_ring_color;
+  float radar_compass_ring_thickness;
+  bool radar_compass_show_ring_labels;
+  int radar_compass_ring_label_font_size;
+  font_resource_t font_radar_compass_ring_labels;
 
-  // Celestial indicators (sun and moon on navball)
+  // Cardinal directions
+  uint32_t radar_compass_cardinal_color;
+  int radar_compass_cardinal_font_size;
+  font_resource_t font_radar_compass_cardinals;
+
+  // FOV wedge
+  uint32_t radar_compass_fov_fill_color;
+  uint32_t radar_compass_fov_outline_color;
+  float radar_compass_fov_outline_thickness;
+
+  // Celestial indicators (sun and moon on radar compass)
   bool celestial_enabled;
   bool celestial_show_sun;
   bool celestial_show_moon;
   float celestial_indicator_scale;
   float celestial_visibility_threshold;
-  svg_resource_t celestial_sun_front_svg;
-  svg_resource_t celestial_sun_back_svg;
-  svg_resource_t celestial_moon_front_svg;
-  svg_resource_t celestial_moon_back_svg;
+  svg_resource_t celestial_sun_svg;
+  svg_resource_t celestial_moon_svg;
 
   // Rendering state
   bool needs_render;

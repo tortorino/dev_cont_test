@@ -90,54 +90,52 @@ typedef struct
   char font_path[256];
 } variant_info_config_t;
 
-// Nav ball skin types
-typedef enum
-{
-  NAVBALL_SKIN_STOCK = 0,          // stock.png - Default KSP nav ball
-  NAVBALL_SKIN_STOCK_IVA,          // stock-iva.png - IVA variant
-  NAVBALL_SKIN_5TH_HORSEMAN_V2,    // 5thHorseman_v2-navball.png
-  NAVBALL_SKIN_5TH_HORSEMAN_BLACK, // 5thHorseman-navball_blackgrey_DIF.png
-  NAVBALL_SKIN_5TH_HORSEMAN_BROWN, // 5thHorseman-navball_brownblue_DIF.png
-  NAVBALL_SKIN_JAFO,               // JAFO.png
-  NAVBALL_SKIN_KBOB_V2,            // kBob_v2.2.png
-  NAVBALL_SKIN_ORDINARY_KERMAN,    // OrdinaryKerman.png
-  NAVBALL_SKIN_TREKKY,             // Trekky0623_DIF.png
-  NAVBALL_SKIN_APOLLO,             // tooRelic_Apollo.png
-  NAVBALL_SKIN_WHITE_OWL,          // White_Owl.png
-  NAVBALL_SKIN_ZASNOLD,            // Zasnold_DIF.png
-  NAVBALL_SKIN_FALCONB,            // FalconB.png
-  NAVBALL_SKIN_COUNT               // Total number of skins
-} navball_skin_t;
+// Maximum number of distance rings for radar compass
+#define RADAR_COMPASS_MAX_RINGS 5
 
-// Nav ball configuration
+// Radar compass configuration
+// A 2D top-down compass display with distance rings, cardinal directions,
+// FOV wedge, and celestial indicators (sun/moon)
 typedef struct
 {
   bool enabled;
   int position_x;
   int position_y;
-  int size;
-  navball_skin_t skin;
-  bool show_level_marker;
+  int size; // Diameter in pixels
 
-  // Center indicator overlay
-  bool show_center_indicator;
-  float center_indicator_scale; // Scale factor (1.0 = 100% of navball size)
-  char center_indicator_svg_path[256];
-} navball_config_t;
+  // Distance rings (configurable)
+  int num_rings;                                 // Number of rings (1-5)
+  float ring_distances[RADAR_COMPASS_MAX_RINGS]; // Distance in km for each ring
+  uint32_t ring_color;
+  float ring_thickness;
+  bool show_ring_labels;
+  int ring_label_font_size;
+  char ring_label_font_path[256];
 
-// Celestial indicators configuration (sun and moon on navball)
+  // Cardinal directions (N, E, S, W)
+  uint32_t cardinal_color;
+  int cardinal_font_size;
+  char cardinal_font_path[256];
+
+  // FOV wedge (angle comes from protobuf state, not config)
+  uint32_t fov_fill_color;    // Semi-transparent fill
+  uint32_t fov_outline_color; // Edge color
+  float fov_outline_thickness;
+} radar_compass_config_t;
+
+// Celestial indicators configuration (sun and moon on radar compass)
+// Indicators are positioned by azimuth on the compass edge,
+// with size/opacity varying by altitude (higher = larger/brighter)
 typedef struct
 {
   bool enabled;               // Master enable for all celestial indicators
   bool show_sun;              // Show sun indicator
   bool show_moon;             // Show moon indicator
-  float indicator_scale;      // Scale factor (1.0 = 100% of default size)
+  float indicator_scale;      // Base scale factor (1.0 = 100% of default size)
   float visibility_threshold; // Min altitude (degrees) to show indicator (e.g.,
                               // -5.0)
-  char sun_front_svg_path[256];  // Sun visible (altitude > 0)
-  char sun_back_svg_path[256];   // Sun behind horizon (altitude < 0)
-  char moon_front_svg_path[256]; // Moon visible
-  char moon_back_svg_path[256];  // Moon behind horizon
+  char sun_svg_path[256];     // Sun indicator SVG
+  char moon_svg_path[256];    // Moon indicator SVG
 } celestial_indicators_config_t;
 
 // Full OSD configuration
@@ -147,7 +145,7 @@ typedef struct
   timestamp_config_t timestamp;
   speed_config_t speed_indicators;
   variant_info_config_t variant_info;
-  navball_config_t navball;
+  radar_compass_config_t radar_compass;
   celestial_indicators_config_t celestial_indicators;
 } osd_config_t;
 

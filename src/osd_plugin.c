@@ -26,7 +26,7 @@
 
 // Widgets
 #include "widgets/crosshair.h"
-#include "widgets/navball.h"
+#include "widgets/radar_compass.h"
 #include "widgets/timestamp.h"
 #include "widgets/variant_info.h"
 
@@ -254,25 +254,16 @@ wasm_osd_init(void)
 
   LOG_INFO("All fonts loaded successfully");
 
-  // Copy celestial indicators configuration to context
-  g_osd_ctx.celestial_enabled  = g_osd_ctx.config.celestial_indicators.enabled;
-  g_osd_ctx.celestial_show_sun = g_osd_ctx.config.celestial_indicators.show_sun;
-  g_osd_ctx.celestial_show_moon
-    = g_osd_ctx.config.celestial_indicators.show_moon;
-  g_osd_ctx.celestial_indicator_scale
-    = g_osd_ctx.config.celestial_indicators.indicator_scale;
-  g_osd_ctx.celestial_visibility_threshold
-    = g_osd_ctx.config.celestial_indicators.visibility_threshold;
-
-  // Initialize nav ball widget (REQUIRED - fail if initialization fails)
-  // Note: navball_init() will load celestial SVGs if celestial_enabled is true
-  LOG_INFO("Initializing nav ball widget...");
-  if (!navball_init(&g_osd_ctx, &g_osd_ctx.config.navball))
+  // Initialize radar compass widget (REQUIRED - fail if initialization fails)
+  // Note: radar_compass_init() will load celestial SVGs if celestial_enabled
+  LOG_INFO("Initializing radar compass widget...");
+  if (!radar_compass_init(&g_osd_ctx, &g_osd_ctx.config.radar_compass,
+                          &g_osd_ctx.config.celestial_indicators))
     {
-      LOG_ERROR("Nav ball initialization FAILED");
+      LOG_ERROR("Radar compass initialization FAILED");
       return -1;
     }
-  LOG_INFO("Nav ball initialized successfully");
+  LOG_INFO("Radar compass initialized successfully");
 
   // Initialize proto buffer
   // update)
@@ -350,7 +341,7 @@ render_widgets(ser_JonGUIState *proto_state)
   if (proto_state)
     {
       changed |= timestamp_render(&g_osd_ctx, proto_state);
-      changed |= navball_render(&g_osd_ctx, proto_state);
+      changed |= radar_compass_render(&g_osd_ctx, proto_state);
     }
 
   // Variant info (needs proto for state time display)
@@ -435,8 +426,8 @@ wasm_osd_destroy(void)
   svg_free(&g_osd_ctx.cross_svg);
   svg_free(&g_osd_ctx.circle_svg);
 
-  // Cleanup nav ball resources
-  navball_cleanup(&g_osd_ctx);
+  // Cleanup radar compass resources
+  radar_compass_cleanup(&g_osd_ctx);
 
   memset(&g_osd_ctx, 0, sizeof(g_osd_ctx));
   return 0;

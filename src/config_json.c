@@ -339,44 +339,118 @@ parse_variant_info_config(cJSON *root, variant_info_config_t *config)
 }
 
 /**
- * Parse navball configuration section
+ * Parse radar compass configuration section
  */
 static void
-parse_navball_config(cJSON *root, navball_config_t *config)
+parse_radar_compass_config(cJSON *root, radar_compass_config_t *config)
 {
-  cJSON *navball = cJSON_GetObjectItem(root, "navball");
-  if (!navball)
+  cJSON *radar_compass = cJSON_GetObjectItem(root, "radar_compass");
+  if (!radar_compass)
     return;
 
-  config->enabled    = get_bool(navball, "enabled", true);
-  config->position_x = get_int(navball, "position_x", 810);
-  config->position_y = get_int(navball, "position_y", 730);
-  config->size       = get_int(navball, "size", 300);
+  config->enabled    = get_bool(radar_compass, "enabled", true);
+  config->position_x = get_int(radar_compass, "position_x", 810);
+  config->position_y = get_int(radar_compass, "position_y", 730);
+  config->size       = get_int(radar_compass, "size", 300);
 
-  // Parse skin name using registry lookup
-  const char *skin_name = get_string(navball, "skin", "5thHorseman_v2");
-  config->skin          = get_navball_skin_by_name(skin_name);
-
-  config->show_level_marker = get_bool(navball, "show_level_marker", false);
-
-  // Parse center indicator configuration
-  cJSON *center_indicator = cJSON_GetObjectItem(navball, "center_indicator");
-  if (center_indicator)
+  // Parse rings configuration
+  cJSON *rings = cJSON_GetObjectItem(radar_compass, "rings");
+  if (rings)
     {
-      config->show_center_indicator
-        = get_bool(center_indicator, "enabled", false);
-      config->center_indicator_scale
-        = (float)get_double(center_indicator, "scale", 0.2);
-
-      // Get indicator SVG path from resource lookup
-      const char *indicator_name
-        = get_string(center_indicator, "indicator", "circle");
-      const char *indicator_path = get_indicator_path(indicator_name);
-      if (indicator_path)
+      // Parse distances array
+      cJSON *distances = cJSON_GetObjectItem(rings, "distances");
+      if (distances && cJSON_IsArray(distances))
         {
-          strncpy(config->center_indicator_svg_path, indicator_path,
-                  sizeof(config->center_indicator_svg_path) - 1);
+          config->num_rings = cJSON_GetArraySize(distances);
+          if (config->num_rings > RADAR_COMPASS_MAX_RINGS)
+            config->num_rings = RADAR_COMPASS_MAX_RINGS;
+
+          for (int i = 0; i < config->num_rings; i++)
+            {
+              cJSON *dist = cJSON_GetArrayItem(distances, i);
+              if (dist && cJSON_IsNumber(dist))
+                {
+                  config->ring_distances[i] = (float)dist->valuedouble;
+                }
+            }
         }
+      else
+        {
+          // Default ring distances
+          config->num_rings         = 3;
+          config->ring_distances[0] = 1.0f;
+          config->ring_distances[1] = 5.0f;
+          config->ring_distances[2] = 20.0f;
+        }
+
+      config->ring_color           = get_color(rings, "color", 0x80FFFFFF);
+      config->ring_thickness       = (float)get_double(rings, "thickness", 1.5);
+      config->show_ring_labels     = get_bool(rings, "show_labels", true);
+      config->ring_label_font_size = get_int(rings, "label_font_size", 12);
+
+      // Parse font name and resolve to path
+      const char *font_name
+        = get_string(rings, "label_font", "liberation_sans_bold");
+      const char *font_path = get_font_path(font_name);
+      if (font_path)
+        {
+          strncpy(config->ring_label_font_path, font_path,
+                  sizeof(config->ring_label_font_path) - 1);
+        }
+    }
+  else
+    {
+      // Default ring config
+      config->num_rings            = 3;
+      config->ring_distances[0]    = 1.0f;
+      config->ring_distances[1]    = 5.0f;
+      config->ring_distances[2]    = 20.0f;
+      config->ring_color           = 0x80FFFFFF;
+      config->ring_thickness       = 1.5f;
+      config->show_ring_labels     = true;
+      config->ring_label_font_size = 12;
+    }
+
+  // Parse cardinals configuration
+  cJSON *cardinals = cJSON_GetObjectItem(radar_compass, "cardinals");
+  if (cardinals)
+    {
+      config->cardinal_color     = get_color(cardinals, "color", 0xFFFFFFFF);
+      config->cardinal_font_size = get_int(cardinals, "font_size", 18);
+
+      // Parse font name and resolve to path
+      const char *font_name
+        = get_string(cardinals, "font", "liberation_sans_bold");
+      const char *font_path = get_font_path(font_name);
+      if (font_path)
+        {
+          strncpy(config->cardinal_font_path, font_path,
+                  sizeof(config->cardinal_font_path) - 1);
+        }
+    }
+  else
+    {
+      // Default cardinal config
+      config->cardinal_color     = 0xFFFFFFFF;
+      config->cardinal_font_size = 18;
+    }
+
+  // Parse FOV wedge configuration
+  cJSON *fov_wedge = cJSON_GetObjectItem(radar_compass, "fov_wedge");
+  if (fov_wedge)
+    {
+      config->fov_fill_color = get_color(fov_wedge, "fill_color", 0x3000FF00);
+      config->fov_outline_color
+        = get_color(fov_wedge, "outline_color", 0xFF00FF00);
+      config->fov_outline_thickness
+        = (float)get_double(fov_wedge, "outline_thickness", 2.0);
+    }
+  else
+    {
+      // Default FOV wedge config
+      config->fov_fill_color        = 0x3000FF00;
+      config->fov_outline_color     = 0xFF00FF00;
+      config->fov_outline_thickness = 2.0f;
     }
 }
 
@@ -384,7 +458,8 @@ parse_navball_config(cJSON *root, navball_config_t *config)
  * Parse celestial indicators configuration
  *
  * Extracts celestial indicators (sun/moon) configuration from JSON.
- * Defaults to enabled with -5° visibility threshold.
+ * For radar compass, indicators use a single SVG each with size/opacity
+ * varying by altitude.
  *
  * @param root Root JSON object
  * @param config Celestial indicators configuration to populate
@@ -408,26 +483,14 @@ parse_celestial_indicators_config(cJSON *root,
   config->visibility_threshold
     = (float)get_double(celestial, "visibility_threshold", -5.0);
 
-  // Parse SVG paths
-  const char *sun_front_path = get_string(
-    celestial, "sun_front_svg", "resources/navball_indicators/sun_front.svg");
-  strncpy(config->sun_front_svg_path, sun_front_path,
-          sizeof(config->sun_front_svg_path) - 1);
+  // Parse SVG paths (single SVG per body for radar compass)
+  const char *sun_path
+    = get_string(celestial, "sun_svg", "resources/radar_indicators/sun.svg");
+  strncpy(config->sun_svg_path, sun_path, sizeof(config->sun_svg_path) - 1);
 
-  const char *sun_back_path = get_string(
-    celestial, "sun_back_svg", "resources/navball_indicators/sun_back.svg");
-  strncpy(config->sun_back_svg_path, sun_back_path,
-          sizeof(config->sun_back_svg_path) - 1);
-
-  const char *moon_front_path = get_string(
-    celestial, "moon_front_svg", "resources/navball_indicators/moon_front.svg");
-  strncpy(config->moon_front_svg_path, moon_front_path,
-          sizeof(config->moon_front_svg_path) - 1);
-
-  const char *moon_back_path = get_string(
-    celestial, "moon_back_svg", "resources/navball_indicators/moon_back.svg");
-  strncpy(config->moon_back_svg_path, moon_back_path,
-          sizeof(config->moon_back_svg_path) - 1);
+  const char *moon_path
+    = get_string(celestial, "moon_svg", "resources/radar_indicators/moon.svg");
+  strncpy(config->moon_svg_path, moon_path, sizeof(config->moon_svg_path) - 1);
 }
 
 // ════════════════════════════════════════════════════════════
@@ -456,7 +519,7 @@ config_parse_json(osd_config_t *config, const char *json_path)
   parse_timestamp_config(root, &config->timestamp);
   parse_speed_indicators_config(root, &config->speed_indicators);
   parse_variant_info_config(root, &config->variant_info);
-  parse_navball_config(root, &config->navball);
+  parse_radar_compass_config(root, &config->radar_compass);
   parse_celestial_indicators_config(root, &config->celestial_indicators);
 
   // Clean up

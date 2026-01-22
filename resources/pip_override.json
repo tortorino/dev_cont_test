@@ -10,7 +10,7 @@
   "timestamp": {
     "enabled": false
   },
-  "navball": {
+  "radar_compass": {
     "enabled": false
   },
   "celestial_indicators": {

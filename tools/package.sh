@@ -265,6 +265,7 @@ collect_resources() {
     mkdir -p "$staging_dir/resources/fonts"
     mkdir -p "$staging_dir/resources/navball_skins"
     mkdir -p "$staging_dir/resources/navball_indicators"
+    mkdir -p "$staging_dir/resources/radar_indicators"
     mkdir -p "$staging_dir/resources/schemas"
 
     # Copy WASM binary (source uses suffix, destination is always variant.wasm)
@@ -300,6 +301,14 @@ collect_resources() {
     for svg in "$RESOURCES_DIR/navball_indicators"/*.svg; do
         if [ -f "$svg" ]; then
             cp "$svg" "$staging_dir/resources/navball_indicators/"
+        fi
+    done
+
+    # Copy all radar indicators (sun/moon for radar compass)
+    log "  Copying all radar indicators..."
+    for svg in "$RESOURCES_DIR/radar_indicators"/*.svg; do
+        if [ -f "$svg" ]; then
+            cp "$svg" "$staging_dir/resources/radar_indicators/"
         fi
     done
 
@@ -396,6 +405,7 @@ generate_manifest_json() {
             resources/fonts/*) type="font" ;;
             resources/navball_skins/*) type="texture" ;;
             resources/navball_indicators/*) type="svg" ;;
+            resources/radar_indicators/*) type="svg" ;;
             resources/schemas/*|*.schema.json) type="schema" ;;
             *) type="other" ;;
         esac

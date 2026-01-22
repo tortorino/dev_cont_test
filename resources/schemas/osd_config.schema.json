@@ -4,7 +4,7 @@
   "title": "OSD Configuration Schema",
   "description": "JSON Schema for Jettison OSD configuration (Draft-07). Note: Some runtime values like crosshair offset (offset_x/offset_y) come from protobuf state, not this config - see rec_osd.day_crosshair_offset_* and heat_crosshair_offset_* fields.",
   "type": "object",
-  "required": ["crosshair", "timestamp", "speed_indicators", "variant_info", "navball", "celestial_indicators"],
+  "required": ["crosshair", "timestamp", "speed_indicators", "variant_info", "radar_compass", "celestial_indicators"],
   "properties": {
     "crosshair": {
       "type": "object",
@@ -148,51 +148,75 @@
         }
       }
     },
-    "navball": {
+    "radar_compass": {
       "type": "object",
-      "title": "Navigation Ball",
+      "title": "Radar Compass",
       "x-ui-level": "top",
       "x-ui-order": 20,
       "x-ui-collapsed": false,
-      "required": ["enabled", "position_x", "position_y", "size", "skin", "show_level_marker", "center_indicator"],
+      "description": "2D top-down compass with distance rings, cardinal directions, and FOV wedge. FOV angle comes from camera state at runtime.",
+      "required": ["enabled", "position_x", "position_y", "size", "rings", "cardinals", "fov_wedge"],
       "properties": {
         "enabled": { "type": "boolean", "title": "Enabled" },
         "position_x": { "type": "integer", "title": "Position X", "minimum": -500, "maximum": 3840 },
         "position_y": { "type": "integer", "title": "Position Y", "minimum": -500, "maximum": 2160 },
-        "size": { "type": "integer", "title": "Size", "minimum": 50, "maximum": 1000 },
-        "skin": {
-          "type": "string",
-          "title": "Skin",
-          "enum": [
-            "stock",
-            "stock_iva",
-            "5thHorseman_v2",
-            "5thHorseman_black",
-            "5thHorseman_brown",
-            "jafo",
-            "kbob_v2",
-            "ordinary_kerman",
-            "trekky",
-            "apollo",
-            "white_owl",
-            "zasnold",
-            "falconb"
-          ]
-        },
-        "show_level_marker": { "type": "boolean", "title": "Show Level Marker" },
-        "center_indicator": {
+        "size": { "type": "integer", "title": "Size", "minimum": 50, "maximum": 1000, "description": "Compass diameter in pixels" },
+        "rings": {
           "type": "object",
-          "title": "Center Indicator",
+          "title": "Distance Rings",
           "x-ui-level": "accordion",
-          "required": ["enabled", "indicator", "scale"],
+          "x-ui-order": 10,
+          "required": ["distances", "color", "thickness", "show_labels"],
           "properties": {
-            "enabled": { "type": "boolean", "title": "Enabled" },
-            "indicator": {
-              "type": "string",
-              "title": "Indicator",
-              "enum": ["circle", "rectangle", "crosshair"]
+            "distances": {
+              "type": "array",
+              "title": "Distances (km)",
+              "items": { "type": "number", "minimum": 0.1, "maximum": 100 },
+              "minItems": 1,
+              "maxItems": 5,
+              "default": [1.0, 5.0, 20.0],
+              "description": "Distance rings in kilometers"
             },
-            "scale": { "type": "number", "title": "Scale", "minimum": 0.05, "maximum": 2.0 }
+            "color": { "$ref": "#/definitions/argb_color", "title": "Ring Color" },
+            "thickness": { "type": "number", "title": "Thickness", "minimum": 0.5, "maximum": 10, "default": 1.5 },
+            "show_labels": { "type": "boolean", "title": "Show Labels", "default": true },
+            "label_font_size": { "type": "integer", "title": "Label Font Size", "minimum": 8, "maximum": 32, "default": 12 },
+            "label_font": {
+              "type": "string",
+              "title": "Label Font",
+              "enum": ["liberation_sans_bold", "b612_mono_bold", "share_tech_mono", "orbitron_bold"],
+              "default": "liberation_sans_bold"
+            }
+          }
+        },
+        "cardinals": {
+          "type": "object",
+          "title": "Cardinal Directions",
+          "x-ui-level": "accordion",
+          "x-ui-order": 20,
+          "required": ["color", "font_size"],
+          "properties": {
+            "color": { "$ref": "#/definitions/argb_color", "title": "Color" },
+            "font_size": { "type": "integer", "title": "Font Size", "minimum": 8, "maximum": 64, "default": 18 },
+            "font": {
+              "type": "string",
+              "title": "Font",
+              "enum": ["liberation_sans_bold", "b612_mono_bold", "share_tech_mono", "orbitron_bold"],
+              "default": "liberation_sans_bold"
+            }
+          }
+        },
+        "fov_wedge": {
+          "type": "object",
+          "title": "Field of View Wedge",
+          "x-ui-level": "accordion",
+          "x-ui-order": 30,
+          "description": "FOV angle is read from camera state at runtime, not configurable here",
+          "required": ["fill_color", "outline_color", "outline_thickness"],
+          "properties": {
+            "fill_color": { "$ref": "#/definitions/argb_color", "title": "Fill Color", "description": "Semi-transparent fill for FOV wedge" },
+            "outline_color": { "$ref": "#/definitions/argb_color", "title": "Outline Color" },
+            "outline_thickness": { "type": "number", "title": "Outline Thickness", "minimum": 0.5, "maximum": 10, "default": 2.0 }
           }
         }
       }
@@ -203,7 +227,8 @@
       "x-ui-level": "top",
       "x-ui-order": 50,
       "x-ui-collapsed": true,
-      "required": ["enabled", "show_sun", "show_moon", "scale", "visibility_threshold", "sun_front_svg", "sun_back_svg", "moon_front_svg", "moon_back_svg"],
+      "description": "Celestial body indicators positioned on radar compass edge by azimuth, with size/opacity varying by altitude",
+      "required": ["enabled", "show_sun", "show_moon", "scale", "visibility_threshold", "sun_svg", "moon_svg"],
       "properties": {
         "enabled": { "type": "boolean", "title": "Enabled" },
         "show_sun": { "type": "boolean", "title": "Show Sun" },
@@ -213,37 +238,25 @@
           "title": "Scale",
           "minimum": 0.1,
           "maximum": 5.0,
-          "description": "Scale factor for celestial indicator size"
+          "description": "Base scale factor for celestial indicator size"
         },
         "visibility_threshold": {
           "type": "number",
           "title": "Visibility Threshold",
           "minimum": -90.0,
           "maximum": 90.0,
-          "description": "Altitude threshold in degrees for showing celestial bodies"
+          "description": "Minimum altitude in degrees to show celestial body (negative shows bodies below horizon)"
         },
-        "sun_front_svg": {
+        "sun_svg": {
           "type": "string",
-          "title": "Sun Front SVG",
-          "description": "Path to sun front hemisphere SVG",
+          "title": "Sun SVG",
+          "description": "Path to sun indicator SVG",
           "x-ui-hidden": true
         },
-        "sun_back_svg": {
+        "moon_svg": {
           "type": "string",
-          "title": "Sun Back SVG",
-          "description": "Path to sun back hemisphere SVG",
-          "x-ui-hidden": true
-        },
-        "moon_front_svg": {
-          "type": "string",
-          "title": "Moon Front SVG",
-          "description": "Path to moon front hemisphere SVG",
-          "x-ui-hidden": true
-        },
-        "moon_back_svg": {
-          "type": "string",
-          "title": "Moon Back SVG",
-          "description": "Path to moon back hemisphere SVG",
+          "title": "Moon SVG",
+          "description": "Path to moon indicator SVG",
           "x-ui-hidden": true
         }
       }

@@ -126,4 +126,154 @@ void draw_rect_outline(framebuffer_t *fb,
                        uint32_t color,
                        float thickness);
 
+// ════════════════════════════════════════════════════════════
+// ELLIPSE DRAWING
+// ════════════════════════════════════════════════════════════
+
+// Draw ellipse outline with separate X and Y radii
+//
+// Parameters:
+//   fb: Framebuffer to draw on
+//   cx, cy: Center point
+//   radius_x: Horizontal radius in pixels
+//   radius_y: Vertical radius in pixels
+//   color: RGBA color (0xAABBGGRR format)
+//   thickness: Stroke width in pixels
+//
+// Usage:
+//   draw_ellipse_outline(&fb, 100, 100, 50.0f, 35.0f, 0xFF00FF00, 2.0f);
+void draw_ellipse_outline(framebuffer_t *fb,
+                          int cx,
+                          int cy,
+                          float radius_x,
+                          float radius_y,
+                          uint32_t color,
+                          float thickness);
+
+// ════════════════════════════════════════════════════════════
+// ARC AND WEDGE DRAWING
+// ════════════════════════════════════════════════════════════
+
+// Draw arc (partial circle outline) from start_angle to end_angle
+//
+// Angles are in degrees, measured clockwise from the positive Y-axis (up).
+// 0° = up, 90° = right, 180° = down, 270° = left.
+// The arc is drawn as line segments for smooth appearance.
+//
+// Parameters:
+//   fb: Framebuffer to draw on
+//   cx, cy: Center point of the arc
+//   radius: Arc radius in pixels
+//   start_angle_deg: Starting angle in degrees
+//   end_angle_deg: Ending angle in degrees
+//   color: RGBA color (0xAABBGGRR format)
+//   thickness: Arc stroke width in pixels
+//   segments: Number of line segments (higher = smoother, 0 = auto)
+//
+// Usage:
+//   draw_arc(&fb, 100, 100, 50.0f, 0.0f, 90.0f, 0xFF00FF00, 2.0f, 0);
+void draw_arc(framebuffer_t *fb,
+              int cx,
+              int cy,
+              float radius,
+              float start_angle_deg,
+              float end_angle_deg,
+              uint32_t color,
+              float thickness,
+              int segments);
+
+// Draw filled wedge (pie slice) from center to edge
+//
+// Creates a filled sector from the center point outward.
+// Angles are in degrees, measured clockwise from up (0° = up).
+//
+// Parameters:
+//   fb: Framebuffer to draw on
+//   cx, cy: Center point (tip of wedge)
+//   radius: Wedge radius in pixels
+//   start_angle_deg: Starting angle in degrees
+//   end_angle_deg: Ending angle in degrees
+//   color: RGBA color (0xAABBGGRR format)
+//
+// Usage:
+//   draw_wedge_filled(&fb, 100, 100, 50.0f, -45.0f, 45.0f, 0x8000FF00);
+void draw_wedge_filled(framebuffer_t *fb,
+                       int cx,
+                       int cy,
+                       float radius,
+                       float start_angle_deg,
+                       float end_angle_deg,
+                       uint32_t color);
+
+// Draw wedge outline (arc + two radial lines)
+//
+// Draws the outline of a pie slice: two lines from center to edge,
+// connected by an arc.
+//
+// Parameters:
+//   fb: Framebuffer to draw on
+//   cx, cy: Center point (tip of wedge)
+//   radius: Wedge radius in pixels
+//   start_angle_deg: Starting angle in degrees
+//   end_angle_deg: Ending angle in degrees
+//   color: RGBA color (0xAABBGGRR format)
+//   thickness: Stroke width in pixels
+//
+// Usage:
+//   draw_wedge_outline(&fb, 100, 100, 50.0f, -45.0f, 45.0f, 0xFF00FF00, 2.0f);
+void draw_wedge_outline(framebuffer_t *fb,
+                        int cx,
+                        int cy,
+                        float radius,
+                        float start_angle_deg,
+                        float end_angle_deg,
+                        uint32_t color,
+                        float thickness);
+
+// ════════════════════════════════════════════════════════════
+// ELLIPTICAL ARC AND WEDGE DRAWING (for perspective views)
+// ════════════════════════════════════════════════════════════
+
+// Draw elliptical arc with separate X and Y radii
+//
+// Parameters:
+//   fb: Framebuffer to draw on
+//   cx, cy: Center point
+//   radius_x, radius_y: Horizontal and vertical radii
+//   start_angle_deg, end_angle_deg: Arc angles in degrees (0° = up, clockwise)
+//   color: RGBA color
+//   thickness: Stroke width in pixels
+//   segments: Number of line segments (0 = auto)
+void draw_ellipse_arc(framebuffer_t *fb,
+                      int cx,
+                      int cy,
+                      float radius_x,
+                      float radius_y,
+                      float start_angle_deg,
+                      float end_angle_deg,
+                      uint32_t color,
+                      float thickness,
+                      int segments);
+
+// Draw filled elliptical wedge (pie slice with elliptical edge)
+void draw_ellipse_wedge_filled(framebuffer_t *fb,
+                               int cx,
+                               int cy,
+                               float radius_x,
+                               float radius_y,
+                               float start_angle_deg,
+                               float end_angle_deg,
+                               uint32_t color);
+
+// Draw elliptical wedge outline
+void draw_ellipse_wedge_outline(framebuffer_t *fb,
+                                int cx,
+                                int cy,
+                                float radius_x,
+                                float radius_y,
+                                float start_angle_deg,
+                                float end_angle_deg,
+                                uint32_t color,
+                                float thickness);
+
 #endif // RENDERING_PRIMITIVES_H
